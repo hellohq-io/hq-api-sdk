@@ -30,12 +30,40 @@ namespace HQ.API.SDK.Sample
             companyById.Name = "New Name";
             companiesApi.CompaniesV1PutById(companyById.Id, companyById);
 
+            // Create a new company with all details. A company always needs a CompanyType and should have a default address.
+            var newCompany = new Company()
+            {
+                Name = "Unit Corp.",
+                DebitorNumber = 3456,
+                CreditorNumber = 1234,
+                Description = "A test corporation",
+                IndustrialSector = "Testing",
+                DefaultAddress = new CompanyAddress()
+                {
+                    Street = "1 Union Drive",
+                    City = "SF",
+                    Country = "US",
+                },
+                CompanyTypes = new List<CompanyType>()
+                {
+                    new CompanyType()
+                    {
+                        Id = 4002,
+                    }
+                }
+            };
+
+            var newCompanySaved = companiesApi.CompaniesV1Post(newCompany);
+
+            // Delete the company
+            var deletedCompany = companiesApi.CompaniesV1DeleteById(newCompanySaved.Id);
+
             // Various filters on the companies
             //var companies = companiesApi.CompaniesV1Get();
             //var companies = companiesApi.CompaniesV1Get(filter: "Id eq 65020");
             //var companies = companiesApi.CompaniesV1Get(filter: "indexof(Name, 'EU') ge 0");
-            var companies = companiesApi.CompaniesV1Get(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00");
-            //var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes");
+            //var companies = companiesApi.CompaniesV1Get(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00");
+            var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes");
             //var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes", filter:"CompanyTypes/any(companyType: companyType/Name eq 'Kunde')");
 
             // Print the company results

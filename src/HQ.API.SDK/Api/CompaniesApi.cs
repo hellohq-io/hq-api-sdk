@@ -44,7 +44,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Object</returns>
-        Object CompaniesV1DeleteById (int? id, string ifMatch = null);
+        Company CompaniesV1DeleteById (int? id, string ifMatch = null);
 
         /// <summary>
         /// Deletes a company
@@ -56,7 +56,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        ApiResponse<Object> CompaniesV1DeleteByIdWithHttpInfo (int? id, string ifMatch = null);
+        ApiResponse<Company> CompaniesV1DeleteByIdWithHttpInfo (int? id, string ifMatch = null);
         /// <summary>
         /// Returns all companies
         /// </summary>
@@ -126,7 +126,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Object</returns>
-        Object CompaniesV1Post (Company company, string expand = null, string select = null);
+        Company CompaniesV1Post (Company company, string expand = null, string select = null);
 
         /// <summary>
         /// Creates a new company
@@ -139,7 +139,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        ApiResponse<Object> CompaniesV1PostWithHttpInfo (Company company, string expand = null, string select = null);
+        ApiResponse<Company> CompaniesV1PostWithHttpInfo (Company company, string expand = null, string select = null);
         /// <summary>
         /// Updates an existing company
         /// </summary>
@@ -152,7 +152,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Object</returns>
-        Object CompaniesV1PutById (int? id, Company company, string expand = null, string select = null);
+        Company CompaniesV1PutById (int? id, Company company, string expand = null, string select = null);
 
         /// <summary>
         /// Updates an existing company
@@ -166,7 +166,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        ApiResponse<Object> CompaniesV1PutByIdWithHttpInfo (int? id, Company company, string expand = null, string select = null);
+        ApiResponse<Company> CompaniesV1PutByIdWithHttpInfo (int? id, Company company, string expand = null, string select = null);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -179,7 +179,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Task of Object</returns>
-        System.Threading.Tasks.Task<Object> CompaniesV1DeleteByIdAsync (int? id, string ifMatch = null);
+        System.Threading.Tasks.Task<Company> CompaniesV1DeleteByIdAsync (int? id, string ifMatch = null);
 
         /// <summary>
         /// Deletes a company
@@ -191,7 +191,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1DeleteByIdAsyncWithHttpInfo (int? id, string ifMatch = null);
+        System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1DeleteByIdAsyncWithHttpInfo (int? id, string ifMatch = null);
         /// <summary>
         /// Returns all companies
         /// </summary>
@@ -261,7 +261,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of Object</returns>
-        System.Threading.Tasks.Task<Object> CompaniesV1PostAsync (Company company, string expand = null, string select = null);
+        System.Threading.Tasks.Task<Company> CompaniesV1PostAsync (Company company, string expand = null, string select = null);
 
         /// <summary>
         /// Creates a new company
@@ -274,7 +274,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1PostAsyncWithHttpInfo (Company company, string expand = null, string select = null);
+        System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1PostAsyncWithHttpInfo (Company company, string expand = null, string select = null);
         /// <summary>
         /// Updates an existing company
         /// </summary>
@@ -287,7 +287,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of Object</returns>
-        System.Threading.Tasks.Task<Object> CompaniesV1PutByIdAsync (int? id, Company company, string expand = null, string select = null);
+        System.Threading.Tasks.Task<Company> CompaniesV1PutByIdAsync (int? id, Company company, string expand = null, string select = null);
 
         /// <summary>
         /// Updates an existing company
@@ -301,7 +301,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1PutByIdAsyncWithHttpInfo (int? id, Company company, string expand = null, string select = null);
+        System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1PutByIdAsyncWithHttpInfo (int? id, Company company, string expand = null, string select = null);
         #endregion Asynchronous Operations
     }
 
@@ -421,9 +421,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Object</returns>
-        public Object CompaniesV1DeleteById (int? id, string ifMatch = null)
+        public Company CompaniesV1DeleteById (int? id, string ifMatch = null)
         {
-             ApiResponse<Object> localVarResponse = CompaniesV1DeleteByIdWithHttpInfo(id, ifMatch);
+            ApiResponse<Company> localVarResponse = CompaniesV1DeleteByIdWithHttpInfo(id, ifMatch);
              return localVarResponse.Data;
         }
 
@@ -434,7 +434,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        public ApiResponse< Object > CompaniesV1DeleteByIdWithHttpInfo (int? id, string ifMatch = null)
+        public ApiResponse<Company> CompaniesV1DeleteByIdWithHttpInfo (int? id, string ifMatch = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -480,9 +480,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
@@ -493,9 +493,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Task of Object</returns>
-        public async System.Threading.Tasks.Task<Object> CompaniesV1DeleteByIdAsync (int? id, string ifMatch = null)
+        public async System.Threading.Tasks.Task<Company> CompaniesV1DeleteByIdAsync (int? id, string ifMatch = null)
         {
-             ApiResponse<Object> localVarResponse = await CompaniesV1DeleteByIdAsyncWithHttpInfo(id, ifMatch);
+            ApiResponse<Company> localVarResponse = await CompaniesV1DeleteByIdAsyncWithHttpInfo(id, ifMatch);
              return localVarResponse.Data;
 
         }
@@ -507,7 +507,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="id">key: Id</param>
         /// <param name="ifMatch">If-Match header (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1DeleteByIdAsyncWithHttpInfo (int? id, string ifMatch = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1DeleteByIdAsyncWithHttpInfo (int? id, string ifMatch = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -553,9 +553,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
@@ -891,9 +891,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Object</returns>
-        public Object CompaniesV1Post (Company company, string expand = null, string select = null)
+        public Company CompaniesV1Post (Company company, string expand = null, string select = null)
         {
-             ApiResponse<Object> localVarResponse = CompaniesV1PostWithHttpInfo(company, expand, select);
+            ApiResponse<Company> localVarResponse = CompaniesV1PostWithHttpInfo(company, expand, select);
              return localVarResponse.Data;
         }
 
@@ -905,7 +905,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        public ApiResponse< Object > CompaniesV1PostWithHttpInfo (Company company, string expand = null, string select = null)
+        public ApiResponse<Company> CompaniesV1PostWithHttpInfo (Company company, string expand = null, string select = null)
         {
             // verify the required parameter 'company' is set
             if (company == null)
@@ -960,9 +960,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
@@ -974,9 +974,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of Object</returns>
-        public async System.Threading.Tasks.Task<Object> CompaniesV1PostAsync (Company company, string expand = null, string select = null)
+        public async System.Threading.Tasks.Task<Company> CompaniesV1PostAsync (Company company, string expand = null, string select = null)
         {
-             ApiResponse<Object> localVarResponse = await CompaniesV1PostAsyncWithHttpInfo(company, expand, select);
+            ApiResponse<Company> localVarResponse = await CompaniesV1PostAsyncWithHttpInfo(company, expand, select);
              return localVarResponse.Data;
 
         }
@@ -989,7 +989,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1PostAsyncWithHttpInfo (Company company, string expand = null, string select = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1PostAsyncWithHttpInfo (Company company, string expand = null, string select = null)
         {
             // verify the required parameter 'company' is set
             if (company == null)
@@ -1044,9 +1044,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
@@ -1059,9 +1059,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Object</returns>
-        public Object CompaniesV1PutById (int? id, Company company, string expand = null, string select = null)
+        public Company CompaniesV1PutById (int? id, Company company, string expand = null, string select = null)
         {
-             ApiResponse<Object> localVarResponse = CompaniesV1PutByIdWithHttpInfo(id, company, expand, select);
+            ApiResponse<Company> localVarResponse = CompaniesV1PutByIdWithHttpInfo(id, company, expand, select);
              return localVarResponse.Data;
         }
 
@@ -1074,7 +1074,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>ApiResponse of Object</returns>
-        public ApiResponse< Object > CompaniesV1PutByIdWithHttpInfo (int? id, Company company, string expand = null, string select = null)
+        public ApiResponse<Company> CompaniesV1PutByIdWithHttpInfo (int? id, Company company, string expand = null, string select = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1133,9 +1133,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
@@ -1148,9 +1148,9 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of Object</returns>
-        public async System.Threading.Tasks.Task<Object> CompaniesV1PutByIdAsync (int? id, Company company, string expand = null, string select = null)
+        public async System.Threading.Tasks.Task<Company> CompaniesV1PutByIdAsync (int? id, Company company, string expand = null, string select = null)
         {
-             ApiResponse<Object> localVarResponse = await CompaniesV1PutByIdAsyncWithHttpInfo(id, company, expand, select);
+            ApiResponse<Company> localVarResponse = await CompaniesV1PutByIdAsyncWithHttpInfo(id, company, expand, select);
              return localVarResponse.Data;
 
         }
@@ -1164,7 +1164,7 @@ namespace HQSB.API.SDK.Api
         /// <param name="expand">Expands related entities inline. (optional)</param>
         /// <param name="select">Selects which properties to include in the response. (optional)</param>
         /// <returns>Task of ApiResponse (Object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> CompaniesV1PutByIdAsyncWithHttpInfo (int? id, Company company, string expand = null, string select = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Company>> CompaniesV1PutByIdAsyncWithHttpInfo (int? id, Company company, string expand = null, string select = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1223,9 +1223,9 @@ namespace HQSB.API.SDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<Object>(localVarStatusCode,
+            return new ApiResponse<Company>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => x.Value.ToString()),
-                (Object) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Object)));
+                (Company) Configuration.ApiClient.Deserialize(localVarResponse, typeof(Company)));
             
         }
 
