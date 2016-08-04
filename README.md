@@ -1,18 +1,17 @@
-# IO.Swagger - the C# library for the HQ API Entities
+# HQ API SDK - the C# library for the HQ API Entities
 
 
 This C# SDK allows convenient access to the HQ API (Preview).
 
 - API version: v1
 - SDK version: 1.0.0
-- Build date: 2016-08-04T07:44:05.984Z
 
 ## Frameworks supported
 - .NET 4.0 or later
 
 ## Dependencies
 - [RestSharp](https://www.nuget.org/packages/RestSharp) - 105.1.0 or later
-- [Json.NET](https://www.nuget.org/packages/Newtonsoft.Json/) - 7.0.0 or later
+- [Json.NET](https://www.nuget.org/packages/Newtonsoft.Json/) - 8.0.0 or later
 
 The DLLs included in the package may not be the latest version. We recommned using [NuGet] (https://docs.nuget.org/consume/installing-nuget) to obtain the latest version of the packages:
 ```
@@ -23,15 +22,12 @@ Install-Package Newtonsoft.Json
 NOTE: RestSharp versions greater than 105.1.0 have a bug which causes file uploads to fail. See [RestSharp#742](https://github.com/restsharp/RestSharp/issues/742)
 
 ## Installation
-Run the following command to generate the DLL
-- [Mac/Linux] `/bin/sh build.sh`
-- [Windows] `build.bat`
 
 Then include the DLL (under the `bin` folder) in the C# project, and use the namespaces:
 ```csharp
 using HQ.API.SDK.Api;
 using HQ.API.SDK.Client;
-using Model;
+using HQ.API.SDK.Model;
 ```
 
 ## Getting Started
@@ -41,7 +37,7 @@ using System;
 using System.Diagnostics;
 using HQ.API.SDK.Api;
 using HQ.API.SDK.Client;
-using Model;
+using HQ.API.SDK.Model;
 
 namespace Example
 {
@@ -94,7 +90,7 @@ namespace Example
 ```
 
 <a name="documentation-for-api-endpoints"></a>
-## Documentation for API Endpoints (Preview)
+## Documentation for API Endpoints
 
 All URIs are relative to *https://yourcompany.hqlabs.de/apiv1*
 
