@@ -4,6 +4,7 @@
 
 # User-specific files
 *.suo
+*.dat
 *.user
 *.sln.docstates
 /.vs

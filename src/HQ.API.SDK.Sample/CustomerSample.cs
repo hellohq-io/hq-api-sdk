@@ -23,12 +23,15 @@ namespace HQ.API.SDK.Sample
             CompaniesApi companiesApi = new CompaniesApi();
 
             // Get one company by id
-            Company companyById = companiesApi.CompaniesV1GetById(56);
+            Company companyById = companiesApi.CompaniesV1GetById(61011);
             Console.WriteLine("Id {0}: {1}", companyById.Id, companyById.Name);
 
             // Change the company name and update it through the api
-            companyById.Name = "New Name";
-            companiesApi.CompaniesV1PutById(companyById.Id, companyById);
+            companyById.Name = companyById.Name + " (API)";
+            var changedCompany = companiesApi.CompaniesV1PutById(companyById.Id, companyById);
+
+            CompanyTypesApi companyTypesApi = new CompanyTypesApi();
+            var customerCompanyType = companyTypesApi.CompanyTypesV1Get(filter: "Name eq 'Kunde'").Value.FirstOrDefault();
 
             // Create a new company with all details. A company always needs a CompanyType and should have a default address.
             var newCompany = new Company()
@@ -40,15 +43,15 @@ namespace HQ.API.SDK.Sample
                 IndustrialSector = "Testing",
                 DefaultAddress = new CompanyAddress()
                 {
-                    Street = "1 Union Drive",
-                    City = "SF",
-                    Country = "US",
+                    Street = "Am Kaiserkai 70",
+                    City = "Hamburg",
+                    Country = "DE",
                 },
                 CompanyTypes = new List<CompanyType>()
                 {
                     new CompanyType()
                     {
-                        Id = 4002,
+                        Id = customerCompanyType.Id,
                     }
                 }
             };
