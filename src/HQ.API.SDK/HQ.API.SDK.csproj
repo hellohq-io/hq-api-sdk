@@ -48,89 +48,68 @@ limitations under the License.
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetOpenAuth.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d0acff3d13b42a9d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DotNetOpenAuth.Core.5.0.0-alpha3\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Common, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d0acff3d13b42a9d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DotNetOpenAuth.OAuth.Common.5.0.0-alpha3\lib\net45-full\DotNetOpenAuth.OAuth.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth2, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d0acff3d13b42a9d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DotNetOpenAuth.OAuth2.Core.5.0.0-alpha3\lib\net45-full\DotNetOpenAuth.OAuth2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth2.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d0acff3d13b42a9d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DotNetOpenAuth.OAuth2.Client.5.0.0-alpha3\lib\net45-full\DotNetOpenAuth.OAuth2.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth2.ClientAuthorization, Version=5.0.0.0, Culture=neutral, PublicKeyToken=d0acff3d13b42a9d, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\DotNetOpenAuth.OAuth2.ClientAuthorization.5.0.0-alpha3\lib\net45-full\DotNetOpenAuth.OAuth2.ClientAuthorization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\..\..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath Condition="Exists('$(SolutionDir)\packages')">$(SolutionDir)\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\packages')">..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\..\packages')">..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition="Exists('..\..\vendor')">..\..\vendor\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp">
-      <HintPath Condition="Exists('$(SolutionDir)\packages')">$(SolutionDir)\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\packages')">..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\..\packages')">..\..\packages\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
-      <HintPath Condition="Exists('..\..\vendor')">..\..\vendor\RestSharp.105.1.0\lib\net45\RestSharp.dll</HintPath>
+    <Reference Include="Validation, Version=2.3.0.0, Culture=neutral, PublicKeyToken=2fc06f0d701809a7, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Validation.2.3.7\lib\dotnet\Validation.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\CompaniesApi.cs" />
-    <Compile Include="Api\CompanyAddressesApi.cs" />
-    <Compile Include="Api\CompanyTypesApi.cs" />
-    <Compile Include="Api\ContactPersonsApi.cs" />
-    <Compile Include="Api\CustomFieldDefinitionsApi.cs" />
-    <Compile Include="Api\ProjectRolesApi.cs" />
-    <Compile Include="Api\ProjectsApi.cs" />
-    <Compile Include="Api\ProjectStatusApi.cs" />
-    <Compile Include="Api\ProjectTemplatesApi.cs" />
-    <Compile Include="Api\QuotationsApi.cs" />
-    <Compile Include="Api\UserAbsencesApi.cs" />
-    <Compile Include="Api\UserReportingsApi.cs" />
-    <Compile Include="Api\UsersApi.cs" />
-    <Compile Include="Client\ApiClient.cs" />
-    <Compile Include="Client\ApiException.cs" />
-    <Compile Include="Client\ApiResponse.cs" />
-    <Compile Include="Client\Configuration.cs" />
-    <Compile Include="Client\ExceptionFactory.cs" />
-    <Compile Include="Client\IApiAccessor.cs" />
-    <Compile Include="Model\Article.cs" />
-    <Compile Include="Model\ArticleCategory.cs" />
-    <Compile Include="Model\ArticleDiscount.cs" />
-    <Compile Include="Model\ArticleSalesPrice.cs" />
-    <Compile Include="Model\ArticleSupplierQuotation.cs" />
-    <Compile Include="Model\Company.cs" />
-    <Compile Include="Model\CompanyAddress.cs" />
-    <Compile Include="Model\CompanyType.cs" />
-    <Compile Include="Model\ContactPerson.cs" />
-    <Compile Include="Model\CustomField.cs" />
-    <Compile Include="Model\CustomFieldDefinition.cs" />
-    <Compile Include="Model\CustomFieldOption.cs" />
-    <Compile Include="Model\DocumentCondition.cs" />
-    <Compile Include="Model\DocumentPosition.cs" />
-    <Compile Include="Model\Lead.cs" />
-    <Compile Include="Model\ModelObject.cs" />
-    <Compile Include="Model\ODataResponseListCompany.cs" />
-    <Compile Include="Model\ODataResponseListCompanyAddress.cs" />
-    <Compile Include="Model\ODataResponseListCompanyType.cs" />
-    <Compile Include="Model\ODataResponseListContactPerson.cs" />
-    <Compile Include="Model\ODataResponseListCustomFieldDefinition.cs" />
-    <Compile Include="Model\ODataResponseListProject.cs" />
-    <Compile Include="Model\ODataResponseListProjectRole.cs" />
-    <Compile Include="Model\ODataResponseListProjectStatus.cs" />
-    <Compile Include="Model\ODataResponseListProjectTemplate.cs" />
-    <Compile Include="Model\ODataResponseListQuotation.cs" />
-    <Compile Include="Model\ODataResponseListUser.cs" />
-    <Compile Include="Model\ODataResponseListUserAbsence.cs" />
-    <Compile Include="Model\ODataResponseListUserReporting.cs" />
-    <Compile Include="Model\Project.cs" />
-    <Compile Include="Model\ProjectRole.cs" />
-    <Compile Include="Model\ProjectStatus.cs" />
-    <Compile Include="Model\ProjectTemplate.cs" />
-    <Compile Include="Model\Quotation.cs" />
-    <Compile Include="Model\Subsystem.cs" />
-    <Compile Include="Model\Task.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="Model\UserAbsence.cs" />
-    <Compile Include="Model\UserReporting.cs" />
+    <Compile Include="Authentication\BasicAuthCredentials.cs" />
+    <Compile Include="Authentication\BearerTokenCredentials.cs" />
+    <Compile Include="Authentication\IAPICredentials.cs" />
+    <Compile Include="Client\HQAPIClient.cs" />
+    <Compile Include="Client\HQAPIClient_generated.cs" />
+    <Compile Include="Config\HQAPIClientConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MsBuildToolsPath)\Microsoft.CSharp.targets" />
