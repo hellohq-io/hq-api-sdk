@@ -32,7 +32,7 @@ namespace HQ.API.SDK
     [GeneratedCode("NSwag", "5.6.6105.20681")]
     public partial class HQAPIClient 
     {
-        public HQAPIClient() : this("http://oauth.hqlabs.de") { }
+        public HQAPIClient() : this("http://api.hqlabs.de") { }
     
         public HQAPIClient(string baseUrl)
         {
@@ -157,8 +157,9 @@ namespace HQ.API.SDK
     
             var client_ = new HttpClient();
             PrepareRequest(client_, ref url_);
-    
-            var content_ = new StringContent(JsonConvert.SerializeObject(company));
+
+            var stringContent = JsonConvert.SerializeObject(company, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Include });
+            var content_ = new StringContent(stringContent);
             content_.Headers.ContentType.MediaType = "application/json";
     
             var response_ = await client_.PostAsync(url_, content_, cancellationToken).ConfigureAwait(false);
@@ -2803,7 +2804,7 @@ namespace HQ.API.SDK
         private CompanyAddress _defaultAddress = new CompanyAddress(); 
         private ObservableCollection<CustomField> _customFields; 
         private ObservableCollection<CompanyTypeOfCompany> _companyTypes; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -2931,7 +2932,7 @@ namespace HQ.API.SDK
     
         /// <summary>The unique identifier of this entity</summary>
         [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        public int Id
         {
             get { return _id; }
             set 
@@ -3513,7 +3514,7 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private string _number; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -3550,7 +3551,7 @@ namespace HQ.API.SDK
     
         /// <summary>The unique identifier of this entity</summary>
         [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        public int Id
         {
             get { return _id; }
             set 

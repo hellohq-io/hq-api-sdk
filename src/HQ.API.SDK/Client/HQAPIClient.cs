@@ -17,12 +17,12 @@ namespace HQ.API.SDK
         public HQAPIClient(HQAPIClientConfiguration configuration) : this(configuration.BaseUrl)
         {
             _configuration = configuration;
-            authServer = new AuthorizationServerDescription()
-            {
-                AuthorizationEndpoint = new Uri(configuration.BaseUrl + AuthorizeUrl),
-                TokenEndpoint = new Uri(configuration.BaseUrl + TokenUrl),
-            };
-            client = new WebServerClient(authServer, clientId, clientSecret);
+            //authServer = new AuthorizationServerDescription()
+            //{
+            //    AuthorizationEndpoint = new Uri(configuration.BaseUrl + AuthorizeUrl),
+            //    TokenEndpoint = new Uri(configuration.BaseUrl + TokenUrl),
+            //};
+            //client = new WebServerClient(authServer, clientId, clientSecret);
         }
 
         /// <summary>
