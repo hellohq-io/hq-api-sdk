@@ -70,7 +70,7 @@ namespace HQSB.API.SDK.Test
         public void InstanceTest()
         {
             // test 'IsInstanceOfType' CompanyTypesApi
-            Assert.IsInstanceOfType(typeof(CompanyTypesApi), instance, "instance is a CompanyTypesApi");
+            Assert.IsInstanceOf< CompanyTypesApi>( instance, "instance is a CompanyTypesApi");
         }
 
         

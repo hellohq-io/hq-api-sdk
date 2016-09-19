@@ -70,7 +70,7 @@ namespace HQSB.API.SDK.Test
         public void InstanceTest()
         {
             // test 'IsInstanceOfType' CustomFieldDefinitionsApi
-            Assert.IsInstanceOfType(typeof(CustomFieldDefinitionsApi), instance, "instance is a CustomFieldDefinitionsApi");
+            Assert.IsInstanceOf<CustomFieldDefinitionsApi>( instance, "instance is a CustomFieldDefinitionsApi");
         }
 
         
