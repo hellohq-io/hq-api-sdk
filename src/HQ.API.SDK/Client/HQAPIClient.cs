@@ -46,8 +46,8 @@ namespace HQ.API.SDK
         /// <param name="url"></param>
         partial void PrepareRequest(HttpClient request, ref string url)
         {
-            if (_configuration != null && _configuration.Credentials != null)
-                request.DefaultRequestHeaders.Add("Authorization", _configuration.Credentials.GetAuthorizationCode());
+            if (_configuration != null && _configuration.GetCurrentCredentials() != null)
+                request.DefaultRequestHeaders.Add("Authorization", _configuration.GetCurrentCredentials().GetAuthorizationCode());
         }
 
         partial void ProcessResponse(HttpClient request, HttpResponseMessage response)

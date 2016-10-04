@@ -1,6 +1,5 @@
-﻿using HQSB.API.SDK.Api;
-using HQSB.API.SDK.Client;
-using HQSB.API.SDK.Model;
+﻿using Authentication;
+using Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,24 +13,20 @@ namespace HQ.API.SDK.Sample
         static void Main(string[] args)
         {
             // Initial configuration
-            Configuration.Default = new Configuration(
-                baseUrl: "https://yourcompany.hqlabs.de/apiv1",
-                username: "your-api-user",
-                password: "your-api-key");
-
-            // Access to the companies api
-            CompaniesApi companiesApi = new CompaniesApi();
+            var client = new HQAPIClient(new HQAPIClientConfiguration("https://oauth.hqlabs.de")
+            {
+                Credentials = new BearerTokenCredentials("j5PNg55onNarKtapRIt1sER2sVGRrkGdUvVlkTDRKwA0FbzmMMxZLEPHsr9lo4ld5rZ_Cz1uCid4ug8RDu-nQPP1Rg2AnOGcNXD1hYrSZl2awznHn8b_dRICc6eRuZYdCcUOfxFB0GgGHqFnKIjkpW5WvAHqi39wHu7EUPwOilQqjwWmCpkrdjGjQUnF8Q-YY_6q9XztVMRoOfBSxnwGAiDT6CIIhY9I8LQ35Pfuc7tnp3T92JbGRmrfcocrSkGIwpVZcqehvs56CypEI2H_UwzMJIEaHAmq18riHNdyckj2pd9L")
+            });
 
             // Get one company by id
-            Company companyById = companiesApi.CompaniesV1GetById(61011);
+            Company companyById = client.CompaniesV1_GetByIdAsync(61011).Result;
             Console.WriteLine("Id {0}: {1}", companyById.Id, companyById.Name);
 
             // Change the company name and update it through the api
             companyById.Name = companyById.Name + " (API)";
-            var changedCompany = companiesApi.CompaniesV1PutById(companyById.Id, companyById);
-
-            CompanyTypesApi companyTypesApi = new CompanyTypesApi();
-            var customerCompanyType = companyTypesApi.CompanyTypesV1Get(filter: "Name eq 'Kunde'").Value.FirstOrDefault();
+            var changedCompany = client.CompaniesV1_PutByIdAsync(companyById.Id, companyById).Result;
+            
+            var customerCompanyType = client.CompanyTypesV1_GetAsync(filter: "Name eq 'Kunde'").Result.FirstOrDefault();
 
             // Create a new company with all details. A company always needs a CompanyType and should have a default address.
             var newCompany = new Company()
@@ -47,27 +42,27 @@ namespace HQ.API.SDK.Sample
                     City = "Hamburg",
                     Country = "DE",
                 },
-                CompanyTypes = new List<CompanyType>()
+                CompanyTypes = new System.Collections.ObjectModel.ObservableCollection<CompanyTypeOfCompany>()
                 {
-                    new CompanyType()
+                    new CompanyTypeOfCompany()
                     {
                         Id = customerCompanyType.Id,
                     }
                 }
             };
 
-            var newCompanySaved = companiesApi.CompaniesV1Post(newCompany);
+            var newCompanySaved = client.CompaniesV1_PostAsync(newCompany).Result;
 
             // Delete the company
-            var deletedCompany = companiesApi.CompaniesV1DeleteById(newCompanySaved.Id);
+            var deletedCompany = client.CompaniesV1_DeleteByIdAsync(newCompanySaved.Id).Result;
 
             // Various filters on the companies
-            //var companies = companiesApi.CompaniesV1Get();
-            //var companies = companiesApi.CompaniesV1Get(filter: "Id eq 65020");
-            //var companies = companiesApi.CompaniesV1Get(filter: "indexof(Name, 'EU') ge 0");
-            //var companies = companiesApi.CompaniesV1Get(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00");
-            var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes");
-            //var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes", filter:"CompanyTypes/any(companyType: companyType/Name eq 'Kunde')");
+            //var companies = client.CompaniesV1_GetAsync().Result;
+            //var companies = client.CompaniesV1_GetAsync(filter: "Id eq 65020").Result;
+            //var companies = client.CompaniesV1_GetAsync(filter: "indexof(Name, 'EU') ge 0").Result;
+            //var companies = client.CompaniesV1_GetAsync(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00").Result;
+            var companies = client.CompaniesV1_GetAsync(expand: "CompanyTypes").Result;
+            //var companies = client.CompaniesV1_GetAsync(expand: "CompanyTypes", filter: "CompanyTypes/any(companyType: companyType/Name eq 'Kunde')").Result;
 
             // Print the company results
             var count = 1;

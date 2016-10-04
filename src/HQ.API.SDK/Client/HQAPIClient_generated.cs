@@ -32,7 +32,7 @@ namespace HQ.API.SDK
     [GeneratedCode("NSwag", "5.6.6105.20681")]
     public partial class HQAPIClient 
     {
-        public HQAPIClient() : this("http://api.hqlabs.de") { }
+        public HQAPIClient() : this("https://oauth.hqlabs.de") { }
     
         public HQAPIClient(string baseUrl)
         {
@@ -104,6 +104,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -111,8 +116,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfCompany>(value); 
     				}
                     return result_.Value; 
@@ -126,15 +130,15 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Creates a new company</summary>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
-        /// <returns>OK</returns>
+        /// <returns>Created</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<Dictionary<string, object>> CompaniesV1_PostAsync(Company company = null, string expand = null, string select = null)
+        public Task<Company> CompaniesV1_PostAsync(Company company = null, string expand = null, string select = null)
         {
             return CompaniesV1_PostAsync(CancellationToken.None, company, expand, select);
         }
@@ -143,9 +147,9 @@ namespace HQ.API.SDK
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>Created</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<Dictionary<string, object>> CompaniesV1_PostAsync(CancellationToken cancellationToken, Company company = null, string expand = null, string select = null)
+        public async Task<Company> CompaniesV1_PostAsync(CancellationToken cancellationToken, Company company = null, string expand = null, string select = null)
         {
             var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/Companies");
     
@@ -157,8 +161,8 @@ namespace HQ.API.SDK
     
             var client_ = new HttpClient();
             PrepareRequest(client_, ref url_);
-
-            var stringContent = JsonConvert.SerializeObject(company, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Include });
+    
+            var stringContent = JsonConvert.SerializeObject(company);
             var content_ = new StringContent(stringContent);
             content_.Headers.ContentType.MediaType = "application/json";
     
@@ -167,16 +171,20 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
-    
-            if (status_ == "200") 
+            var value = string.Empty;
+            if (responseData_.Length > 0)
             {
-                var result_ = default(Dictionary<string, object>); 
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
+    
+            if (status_ == "201") 
+            {
+                var result_ = default(Company); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
+                    {
+                        result_ = JsonConvert.DeserializeObject<Company>(value); 
     				}
                     return result_; 
                 } 
@@ -189,7 +197,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the company with the specified id</summary>
@@ -232,6 +240,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -239,8 +252,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Company>(value); 
     				}
                     return result_; 
@@ -254,7 +266,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Updates an existing company</summary>
@@ -263,7 +275,7 @@ namespace HQ.API.SDK
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<Dictionary<string, object>> CompaniesV1_PutByIdAsync(int id, Company company = null, string expand = null, string select = null)
+        public Task<Company> CompaniesV1_PutByIdAsync(int id, Company company = null, string expand = null, string select = null)
         {
             return CompaniesV1_PutByIdAsync(CancellationToken.None, id, company, expand, select);
         }
@@ -275,7 +287,7 @@ namespace HQ.API.SDK
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<Dictionary<string, object>> CompaniesV1_PutByIdAsync(CancellationToken cancellationToken, int id, Company company = null, string expand = null, string select = null)
+        public async Task<Company> CompaniesV1_PutByIdAsync(CancellationToken cancellationToken, int id, Company company = null, string expand = null, string select = null)
         {
             var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/Companies({Id})");
     
@@ -292,7 +304,8 @@ namespace HQ.API.SDK
             var client_ = new HttpClient();
             PrepareRequest(client_, ref url_);
     
-            var content_ = new StringContent(JsonConvert.SerializeObject(company));
+            var stringContent = JsonConvert.SerializeObject(company);
+            var content_ = new StringContent(stringContent);
             content_.Headers.ContentType.MediaType = "application/json";
     
             var response_ = await client_.PutAsync(url_, content_, cancellationToken).ConfigureAwait(false);
@@ -300,16 +313,20 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
-                var result_ = default(Dictionary<string, object>); 
+                var result_ = default(Company); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
+                    {
+                        result_ = JsonConvert.DeserializeObject<Company>(value); 
     				}
                     return result_; 
                 } 
@@ -322,13 +339,13 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes a company</summary>
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public Task<Dictionary<string, object>> CompaniesV1_DeleteByIdAsync(int id, string if_Match = null)
         {
@@ -339,7 +356,7 @@ namespace HQ.API.SDK
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public async Task<Dictionary<string, object>> CompaniesV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
         {
@@ -358,15 +375,19 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
-            if (status_ == "200") 
+            if (status_ == "204") 
             {
                 var result_ = default(Dictionary<string, object>); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -380,7 +401,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all company addresses</summary>
@@ -442,6 +463,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -449,8 +475,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfCompanyAddress>(value); 
     				}
                     return result_.Value; 
@@ -464,7 +489,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the company address with the specified id</summary>
@@ -507,6 +532,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -514,8 +544,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<CompanyAddress>(value); 
     				}
                     return result_; 
@@ -529,7 +558,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all company types</summary>
@@ -591,6 +620,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -598,8 +632,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfCompanyType>(value); 
     				}
                     return result_.Value; 
@@ -613,7 +646,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the company type with the specified id</summary>
@@ -656,6 +689,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -663,8 +701,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<CompanyType>(value); 
     				}
                     return result_; 
@@ -678,13 +715,13 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes a company type</summary>
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public Task<Dictionary<string, object>> CompanyTypesV1_DeleteByIdAsync(int id, string if_Match = null)
         {
@@ -695,7 +732,7 @@ namespace HQ.API.SDK
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public async Task<Dictionary<string, object>> CompanyTypesV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
         {
@@ -714,15 +751,19 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
-            if (status_ == "200") 
+            if (status_ == "204") 
             {
                 var result_ = default(Dictionary<string, object>); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -736,7 +777,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all project roles</summary>
@@ -798,6 +839,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -805,8 +851,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfContactPerson>(value); 
     				}
                     return result_.Value; 
@@ -820,7 +865,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the contact person with the specified id</summary>
@@ -863,6 +908,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -870,8 +920,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ContactPerson>(value); 
     				}
                     return result_; 
@@ -885,7 +934,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all customfield definitions</summary>
@@ -947,6 +996,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -954,8 +1008,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfCustomFieldDefinition>(value); 
     				}
                     return result_.Value; 
@@ -969,7 +1022,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the custom field definition with the specified id</summary>
@@ -1012,6 +1065,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1019,8 +1077,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<CustomFieldDefinition>(value); 
     				}
                     return result_; 
@@ -1034,68 +1091,10 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
-        /// <summary>Deletes a custom field definition</summary>
-        /// <param name="id">key: Id</param>
-        /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<Dictionary<string, object>> CustomFieldDefinitionsV1_DeleteByIdAsync(int id, string if_Match = null)
-        {
-            return CustomFieldDefinitionsV1_DeleteByIdAsync(CancellationToken.None, id, if_Match);
-        }
-    
-        /// <summary>Deletes a custom field definition</summary>
-        /// <param name="id">key: Id</param>
-        /// <param name="if_Match">If-Match header</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<Dictionary<string, object>> CustomFieldDefinitionsV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
-        {
-            var url_ = string.Format("{0}/{1}", BaseUrl, "v1/CustomFieldDefinitions({Id})");
-    
-            if (id == null)
-                throw new ArgumentNullException("id");
-            url_ = url_.Replace("{Id}", Uri.EscapeDataString(id.ToString()));
-    
-            var client_ = new HttpClient();
-            PrepareRequest(client_, ref url_);
-            client_.DefaultRequestHeaders.TryAddWithoutValidation("If-Match", if_Match);
-    
-            var response_ = await client_.DeleteAsync(url_, cancellationToken).ConfigureAwait(false);
-            ProcessResponse(client_, response_);
-    
-            var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
-            var status_ = ((int)response_.StatusCode).ToString();
-    
-            if (status_ == "200") 
-            {
-                var result_ = default(Dictionary<string, object>); 
-                try
-                {
-                    if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
-    				}
-                    return result_; 
-                } 
-                catch (Exception exception) 
-                {
-                    throw new SwaggerException("Could not deserialize the response body.", status_, responseData_, exception);
-                }
-            }
-            else
-            {
-            }
-    
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
-        }
-    
-        /// <summary>Returns all quotations</summary>
+        /// <summary>Returns all invoices</summary>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="filter">Filters the results, based on a Boolean condition.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1110,7 +1109,7 @@ namespace HQ.API.SDK
             return InvoicesV1_GetAsync(CancellationToken.None, expand, filter, select, orderby, top, skip, count);
         }
     
-        /// <summary>Returns all quotations</summary>
+        /// <summary>Returns all invoices</summary>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="filter">Filters the results, based on a Boolean condition.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1154,6 +1153,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1161,8 +1165,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfInvoice>(value); 
     				}
                     return result_.Value; 
@@ -1176,10 +1179,10 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
-        /// <summary>Returns the entity with the key from Invoices</summary>
+        /// <summary>Returns the invoice with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1190,7 +1193,7 @@ namespace HQ.API.SDK
             return InvoicesV1_GetByIdAsync(CancellationToken.None, id, expand, select);
         }
     
-        /// <summary>Returns the entity with the key from Invoices</summary>
+        /// <summary>Returns the invoice with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1219,6 +1222,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1226,8 +1234,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Invoice>(value); 
     				}
                     return result_; 
@@ -1241,7 +1248,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all project roles</summary>
@@ -1303,6 +1310,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1310,8 +1322,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfProjectRole>(value); 
     				}
                     return result_.Value; 
@@ -1325,7 +1336,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the project role with the specified id</summary>
@@ -1368,6 +1379,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1375,8 +1391,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ProjectRole>(value); 
     				}
                     return result_; 
@@ -1390,13 +1405,13 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes a project role</summary>
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public Task<Dictionary<string, object>> ProjectRolesV1_DeleteByIdAsync(int id, string if_Match = null)
         {
@@ -1407,7 +1422,7 @@ namespace HQ.API.SDK
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public async Task<Dictionary<string, object>> ProjectRolesV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
         {
@@ -1426,15 +1441,19 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
-            if (status_ == "200") 
+            if (status_ == "204") 
             {
                 var result_ = default(Dictionary<string, object>); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -1448,7 +1467,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all project status</summary>
@@ -1510,6 +1529,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1517,8 +1541,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfProjectStatus>(value); 
     				}
                     return result_.Value; 
@@ -1532,7 +1555,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the project status with the specified id</summary>
@@ -1575,6 +1598,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1582,8 +1610,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ProjectStatus>(value); 
     				}
                     return result_; 
@@ -1597,13 +1624,13 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes a project status</summary>
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public Task<Dictionary<string, object>> ProjectStatusV1_DeleteByIdAsync(int id, string if_Match = null)
         {
@@ -1614,7 +1641,7 @@ namespace HQ.API.SDK
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public async Task<Dictionary<string, object>> ProjectStatusV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
         {
@@ -1633,15 +1660,19 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
-            if (status_ == "200") 
+            if (status_ == "204") 
             {
                 var result_ = default(Dictionary<string, object>); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -1655,7 +1686,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all project templates</summary>
@@ -1717,6 +1748,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1724,8 +1760,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfProjectTemplate>(value); 
     				}
                     return result_.Value; 
@@ -1739,10 +1774,10 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
-        /// <summary>Returns the project status with the specified id</summary>
+        /// <summary>Returns the entity with the key from ProjectTemplates</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1753,7 +1788,7 @@ namespace HQ.API.SDK
             return ProjectTemplatesV1_GetByIdAsync(CancellationToken.None, id, expand, select);
         }
     
-        /// <summary>Returns the project status with the specified id</summary>
+        /// <summary>Returns the entity with the key from ProjectTemplates</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
@@ -1782,6 +1817,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1789,8 +1829,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ProjectTemplate>(value); 
     				}
                     return result_; 
@@ -1804,7 +1843,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all projects</summary>
@@ -1866,6 +1905,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1873,8 +1917,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfProject>(value); 
     				}
                     return result_.Value; 
@@ -1888,7 +1931,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the project with the specified id</summary>
@@ -1931,6 +1974,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -1938,8 +1986,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Project>(value); 
     				}
                     return result_; 
@@ -1953,7 +2000,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all quotations</summary>
@@ -2015,6 +2062,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2022,8 +2074,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfQuotation>(value); 
     				}
                     return result_.Value; 
@@ -2037,28 +2088,28 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
-        /// <summary>Returns all quotations</summary>
+        /// <summary>Returns the quotation with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<ObservableCollection<Quotation>> QuotationsV1_GetByIdAsync(int id, string expand = null, string select = null)
+        public Task<Quotation> QuotationsV1_GetByIdAsync(int id, string expand = null, string select = null)
         {
             return QuotationsV1_GetByIdAsync(CancellationToken.None, id, expand, select);
         }
     
-        /// <summary>Returns all quotations</summary>
+        /// <summary>Returns the quotation with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<ObservableCollection<Quotation>> QuotationsV1_GetByIdAsync(CancellationToken cancellationToken, int id, string expand = null, string select = null)
+        public async Task<Quotation> QuotationsV1_GetByIdAsync(CancellationToken cancellationToken, int id, string expand = null, string select = null)
         {
             var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/Quotations({Id})");
     
@@ -2080,18 +2131,22 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
-                var result_ = default(ODataResponseOfListOfQuotation); 
+                var result_ = default(Quotation); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfQuotation>(value); 
+                    {
+                        result_ = JsonConvert.DeserializeObject<Quotation>(value); 
     				}
-                    return result_.Value; 
+                    return result_; 
                 } 
                 catch (Exception exception) 
                 {
@@ -2102,7 +2157,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all absences</summary>
@@ -2164,6 +2219,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2171,8 +2231,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfUserAbsence>(value); 
     				}
                     return result_.Value; 
@@ -2186,16 +2245,16 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Creates a new absence</summary>
         /// <param name="userAbsence">The entity to post</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
-        /// <returns>OK</returns>
+        /// <returns>Created</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<Dictionary<string, object>> UserAbsencesV1_PostAsync(UserAbsence userAbsence = null, string expand = null, string select = null)
+        public Task<UserAbsence> UserAbsencesV1_PostAsync(UserAbsence userAbsence = null, string expand = null, string select = null)
         {
             return UserAbsencesV1_PostAsync(CancellationToken.None, userAbsence, expand, select);
         }
@@ -2205,9 +2264,9 @@ namespace HQ.API.SDK
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>Created</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<Dictionary<string, object>> UserAbsencesV1_PostAsync(CancellationToken cancellationToken, UserAbsence userAbsence = null, string expand = null, string select = null)
+        public async Task<UserAbsence> UserAbsencesV1_PostAsync(CancellationToken cancellationToken, UserAbsence userAbsence = null, string expand = null, string select = null)
         {
             var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/UserAbsences");
     
@@ -2220,7 +2279,8 @@ namespace HQ.API.SDK
             var client_ = new HttpClient();
             PrepareRequest(client_, ref url_);
     
-            var content_ = new StringContent(JsonConvert.SerializeObject(userAbsence));
+            var stringContent = JsonConvert.SerializeObject(userAbsence);
+            var content_ = new StringContent(stringContent);
             content_.Headers.ContentType.MediaType = "application/json";
     
             var response_ = await client_.PostAsync(url_, content_, cancellationToken).ConfigureAwait(false);
@@ -2228,16 +2288,20 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
-    
-            if (status_ == "200") 
+            var value = string.Empty;
+            if (responseData_.Length > 0)
             {
-                var result_ = default(Dictionary<string, object>); 
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
+    
+            if (status_ == "201") 
+            {
+                var result_ = default(UserAbsence); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
+                    {
+                        result_ = JsonConvert.DeserializeObject<UserAbsence>(value); 
     				}
                     return result_; 
                 } 
@@ -2250,28 +2314,28 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
-        /// <summary>Returns all absences</summary>
+        /// <summary>Returns the absence with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<ObservableCollection<UserAbsence>> UserAbsencesV1_GetByIdAsync(int id, string expand = null, string select = null)
+        public Task<UserAbsence> UserAbsencesV1_GetByIdAsync(int id, string expand = null, string select = null)
         {
             return UserAbsencesV1_GetByIdAsync(CancellationToken.None, id, expand, select);
         }
     
-        /// <summary>Returns all absences</summary>
+        /// <summary>Returns the absence with the specified id</summary>
         /// <param name="id">key: Id</param>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="select">Selects which properties to include in the response.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<ObservableCollection<UserAbsence>> UserAbsencesV1_GetByIdAsync(CancellationToken cancellationToken, int id, string expand = null, string select = null)
+        public async Task<UserAbsence> UserAbsencesV1_GetByIdAsync(CancellationToken cancellationToken, int id, string expand = null, string select = null)
         {
             var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/UserAbsences({Id})");
     
@@ -2293,18 +2357,22 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
-                var result_ = default(ODataResponseOfListOfUserAbsence); 
+                var result_ = default(UserAbsence); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-                        result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfUserAbsence>(value); 
+                    {
+                        result_ = JsonConvert.DeserializeObject<UserAbsence>(value); 
     				}
-                    return result_.Value; 
+                    return result_; 
                 } 
                 catch (Exception exception) 
                 {
@@ -2315,7 +2383,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes an absence</summary>
@@ -2351,6 +2419,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2358,8 +2431,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -2373,7 +2445,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all user reportings</summary>
@@ -2435,6 +2507,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2442,8 +2519,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfUserReporting>(value); 
     				}
                     return result_.Value; 
@@ -2457,7 +2533,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the user reporting with the specified id</summary>
@@ -2500,6 +2576,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2507,8 +2588,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<UserReporting>(value); 
     				}
                     return result_; 
@@ -2522,13 +2602,13 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Deletes a user reporting</summary>
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public Task<Dictionary<string, object>> UserReportingsV1_DeleteByIdAsync(int id, string if_Match = null)
         {
@@ -2539,7 +2619,7 @@ namespace HQ.API.SDK
         /// <param name="id">key: Id</param>
         /// <param name="if_Match">If-Match header</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>OK</returns>
+        /// <returns>NoContent</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
         public async Task<Dictionary<string, object>> UserReportingsV1_DeleteByIdAsync(CancellationToken cancellationToken, int id, string if_Match = null)
         {
@@ -2558,15 +2638,19 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
-            if (status_ == "200") 
+            if (status_ == "204") 
             {
                 var result_ = default(Dictionary<string, object>); 
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<Dictionary<string, object>>(value); 
     				}
                     return result_; 
@@ -2580,7 +2664,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns all users</summary>
@@ -2642,6 +2726,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2649,8 +2738,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfUser>(value); 
     				}
                     return result_.Value; 
@@ -2664,7 +2752,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
         /// <summary>Returns the user with the specified id</summary>
@@ -2707,6 +2795,11 @@ namespace HQ.API.SDK
     
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false); 
             var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
     
             if (status_ == "200") 
             {
@@ -2714,8 +2807,7 @@ namespace HQ.API.SDK
                 try
                 {
                     if (responseData_.Length > 0)
-    				{
-                        var value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+                    {
                         result_ = JsonConvert.DeserializeObject<User>(value); 
     				}
                     return result_; 
@@ -2729,7 +2821,7 @@ namespace HQ.API.SDK
             {
             }
     
-            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+            throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + "): " + value, status_, responseData_, null);
         }
     
     }
@@ -2801,7 +2893,7 @@ namespace HQ.API.SDK
         private string _description; 
         private int? _debitorNumber; 
         private int? _creditorNumber; 
-        private CompanyAddress _defaultAddress = new CompanyAddress(); 
+        private CompanyAddress _defaultAddress; 
         private ObservableCollection<CustomField> _customFields; 
         private ObservableCollection<CompanyTypeOfCompany> _companyTypes; 
         private int _id; 
@@ -2931,7 +3023,7 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("Id", Required = Required.Always)]
         public int Id
         {
             get { return _id; }
@@ -3041,8 +3133,8 @@ namespace HQ.API.SDK
         private string _email; 
         private string _website; 
         private bool? _isStandard; 
-        private CompanyAddressStandardForDocumentType _standardForDocumentType; 
-        private int? _id; 
+        private CompanyAddressDefaultForDocumentType? _defaultForDocumentType; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -3229,23 +3321,24 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The document type this address should be used as a standard for</summary>
-        [JsonProperty("StandardForDocumentType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public CompanyAddressStandardForDocumentType StandardForDocumentType
+        [JsonProperty("DefaultForDocumentType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CompanyAddressDefaultForDocumentType? DefaultForDocumentType
         {
-            get { return _standardForDocumentType; }
+            get { return _defaultForDocumentType; }
             set 
             {
-                if (_standardForDocumentType != value)
+                if (_defaultForDocumentType != value)
                 {
-                    _standardForDocumentType = value; 
+                    _defaultForDocumentType = value; 
                     RaisePropertyChanged();
                 }
             }
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -3345,8 +3438,8 @@ namespace HQ.API.SDK
         private string _name; 
         private string _value; 
         private int? _customFieldDefinitionId; 
-        private CustomFieldType _type; 
-        private int? _id; 
+        private CustomFieldType? _type; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -3400,7 +3493,8 @@ namespace HQ.API.SDK
     
         /// <summary>The type of this customfield</summary>
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public CustomFieldType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CustomFieldType? Type
         {
             get { return _type; }
             set 
@@ -3414,8 +3508,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -3550,7 +3644,7 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("Id", Required = Required.Always)]
         public int Id
         {
             get { return _id; }
@@ -3784,7 +3878,7 @@ namespace HQ.API.SDK
     public partial class CompanyType : INotifyPropertyChanged
     { 
         private string _name; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -3806,8 +3900,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -3969,10 +4063,10 @@ namespace HQ.API.SDK
         private string _title; 
         private string _language; 
         private int? _defaultAddressId; 
-        private CompanyAddress _defaultAddress = new CompanyAddress(); 
+        private CompanyAddress _defaultAddress; 
         private ObservableCollection<CustomField> _customFields; 
-        private Company _company = new Company(); 
-        private int? _id; 
+        private Company _company; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -4164,8 +4258,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -4324,9 +4418,9 @@ namespace HQ.API.SDK
         private int? _rightLevelWrite; 
         private bool? _isRequired; 
         private string _typeText; 
-        private CustomFieldDefinitionCategory _category; 
+        private CustomFieldDefinitionCategory? _category; 
         private ObservableCollection<CustomFieldOption> _options; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -4441,7 +4535,8 @@ namespace HQ.API.SDK
     
         /// <summary>The textual representation of the category</summary>
         [JsonProperty("Category", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public CustomFieldDefinitionCategory Category
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CustomFieldDefinitionCategory? Category
         {
             get { return _category; }
             set 
@@ -4470,8 +4565,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -4569,7 +4664,7 @@ namespace HQ.API.SDK
     public partial class CustomFieldOption : INotifyPropertyChanged
     { 
         private string _optionValue; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -4591,8 +4686,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -4747,49 +4842,49 @@ namespace HQ.API.SDK
         private DateTime? _invoiceDate; 
         private DateTime? _dueDate; 
         private DateTime? _bookingDate; 
-        private InvoiceStatus _status; 
+        private InvoiceStatus? _status; 
         private ObservableCollection<DocumentPosition> _positions; 
-        private InvoiceCurrency _currency; 
+        private InvoiceCurrency? _currency; 
         private double? _exchangeRate; 
         private DateTime? _deliveryDate; 
         private int? _paymentConditionId; 
         private int? _deliveryConditionId; 
-        private DocumentCondition _paymentCondition = new DocumentCondition(); 
-        private DocumentCondition _deliveryCondition = new DocumentCondition(); 
-        private InvoiceDiscountType _discountType; 
+        private DocumentCondition _paymentCondition; 
+        private DocumentCondition _deliveryCondition; 
+        private InvoiceDiscountType? _discountType; 
         private double? _discount; 
         private double? _margin; 
-        private InvoiceTaxOption _taxOption; 
-        private InvoiceServiceOption _serviceOption; 
+        private InvoiceTaxOption? _taxOption; 
+        private InvoiceServiceOption? _serviceOption; 
         private decimal? _netTotal; 
         private decimal? _grossTotal; 
         private decimal? _vatTotal; 
         private decimal? _paidTotal; 
-        private InvoiceType _type; 
+        private InvoiceType? _type; 
         private string _typeText; 
         private string _addressText; 
         private int? _companyAddressId; 
-        private CompanyAddress _companyAddress = new CompanyAddress(); 
+        private CompanyAddress _companyAddress; 
         private string _subject; 
         private string _header; 
         private string _footer; 
         private int? _documentTemplateId; 
         private string _number; 
         private int? _contactPersonId; 
-        private ContactPerson _contactPerson = new ContactPerson(); 
+        private ContactPerson _contactPerson; 
         private int? _companyId; 
-        private Company _company = new Company(); 
+        private Company _company; 
         private int? _internalContactPersonId; 
-        private User _internalContactPerson = new User(); 
+        private User _internalContactPerson; 
         private int? _leadId; 
-        private Lead _lead = new Lead(); 
+        private Lead _lead; 
         private string _syncId; 
         private int? _projectId; 
-        private Project _project = new Project(); 
+        private Project _project; 
         private string _note; 
         private string _language; 
-        private HQFile _documentFile = new HQFile(); 
-        private int? _id; 
+        private HQFile _documentFile; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -4842,7 +4937,8 @@ namespace HQ.API.SDK
     
         /// <summary>The status of this invoice</summary>
         [JsonProperty("Status", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceStatus Status
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceStatus? Status
         {
             get { return _status; }
             set 
@@ -4872,7 +4968,8 @@ namespace HQ.API.SDK
     
         /// <summary>The currency of this document.</summary>
         [JsonProperty("Currency", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceCurrency Currency
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceCurrency? Currency
         {
             get { return _currency; }
             set 
@@ -4977,7 +5074,8 @@ namespace HQ.API.SDK
     
         /// <summary>Whether the document discount is specified as a total or a percentage.</summary>
         [JsonProperty("DiscountType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceDiscountType DiscountType
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceDiscountType? DiscountType
         {
             get { return _discountType; }
             set 
@@ -5025,7 +5123,8 @@ namespace HQ.API.SDK
         /// <summary>The tax rule that should apply to this document. 
         ///             VAT is most commonly used for documents within the same country.</summary>
         [JsonProperty("TaxOption", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceTaxOption TaxOption
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceTaxOption? TaxOption
         {
             get { return _taxOption; }
             set 
@@ -5040,7 +5139,8 @@ namespace HQ.API.SDK
     
         /// <summary>Whether the positions in this document are a delivery or any other kind of service.</summary>
         [JsonProperty("ServiceOption", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceServiceOption ServiceOption
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceServiceOption? ServiceOption
         {
             get { return _serviceOption; }
             set 
@@ -5123,7 +5223,8 @@ namespace HQ.API.SDK
     
         /// <summary>The type of the document</summary>
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public InvoiceType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public InvoiceType? Type
         {
             get { return _type; }
             set 
@@ -5482,8 +5583,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -5587,16 +5688,19 @@ namespace HQ.API.SDK
         private decimal? _price; 
         private double? _discount; 
         private double? _margin; 
-        private DocumentPositionType _type; 
+        private DocumentPositionType? _type; 
         private int? _order; 
         private int? _articleId; 
-        private Article _article = new Article(); 
+        private Article _article; 
         private double? _amount; 
         private string _bookingAccount; 
         private string _costCenter1; 
         private string _costCenter2; 
         private bool? _excludeFromEarlyPayment; 
-        private int? _id; 
+        private double? _totalPrice; 
+        private double? _totalUnitPrice; 
+        private double? _totalVat; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -5709,7 +5813,8 @@ namespace HQ.API.SDK
     
         /// <summary>The type of this position</summary>
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public DocumentPositionType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DocumentPositionType? Type
         {
             get { return _type; }
             set 
@@ -5841,9 +5946,54 @@ namespace HQ.API.SDK
             }
         }
     
+        /// <summary>The Total price under considaration of margin and discount</summary>
+        [JsonProperty("TotalPrice", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public double? TotalPrice
+        {
+            get { return _totalPrice; }
+            set 
+            {
+                if (_totalPrice != value)
+                {
+                    _totalPrice = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The Total unit price under considaration of margin and discount</summary>
+        [JsonProperty("TotalUnitPrice", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public double? TotalUnitPrice
+        {
+            get { return _totalUnitPrice; }
+            set 
+            {
+                if (_totalUnitPrice != value)
+                {
+                    _totalUnitPrice = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The Total vat under considaration of margin and discount</summary>
+        [JsonProperty("TotalVat", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public double? TotalVat
+        {
+            get { return _totalVat; }
+            set 
+            {
+                if (_totalVat != value)
+                {
+                    _totalVat = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -5942,11 +6092,12 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private string _text; 
-        private int? _timeInDays; 
-        private int? _warningDays; 
-        private int? _reminderDays; 
+        private string _displayText; 
+        private int? _dueInDays; 
+        private int? _warningInDays; 
+        private int? _reminderInDays; 
         private string _language; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -5980,43 +6131,57 @@ namespace HQ.API.SDK
             }
         }
     
-        [JsonProperty("TimeInDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? TimeInDays
+        [JsonProperty("DisplayText", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public string DisplayText
         {
-            get { return _timeInDays; }
+            get { return _displayText; }
             set 
             {
-                if (_timeInDays != value)
+                if (_displayText != value)
                 {
-                    _timeInDays = value; 
+                    _displayText = value; 
                     RaisePropertyChanged();
                 }
             }
         }
     
-        [JsonProperty("WarningDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? WarningDays
+        [JsonProperty("DueInDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public int? DueInDays
         {
-            get { return _warningDays; }
+            get { return _dueInDays; }
             set 
             {
-                if (_warningDays != value)
+                if (_dueInDays != value)
                 {
-                    _warningDays = value; 
+                    _dueInDays = value; 
                     RaisePropertyChanged();
                 }
             }
         }
     
-        [JsonProperty("ReminderDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? ReminderDays
+        [JsonProperty("WarningInDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public int? WarningInDays
         {
-            get { return _reminderDays; }
+            get { return _warningInDays; }
             set 
             {
-                if (_reminderDays != value)
+                if (_warningInDays != value)
                 {
-                    _reminderDays = value; 
+                    _warningInDays = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [JsonProperty("ReminderInDays", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public int? ReminderInDays
+        {
+            get { return _reminderInDays; }
+            set 
+            {
+                if (_reminderInDays != value)
+                {
+                    _reminderInDays = value; 
                     RaisePropertyChanged();
                 }
             }
@@ -6037,8 +6202,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -6141,7 +6306,7 @@ namespace HQ.API.SDK
         private string _eMailWork; 
         private string _salutation; 
         private string _title; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -6238,8 +6403,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -6337,7 +6502,7 @@ namespace HQ.API.SDK
     public partial class Lead : INotifyPropertyChanged
     { 
         private string _number; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -6359,8 +6524,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -6463,13 +6628,13 @@ namespace HQ.API.SDK
         private DateTime? _plannedEndDate; 
         private ObservableCollection<Subsystem> _subsystems; 
         private int? _projectTemplateId; 
-        private ProjectTemplate _projectTemplate = new ProjectTemplate(); 
+        private ProjectTemplate _projectTemplate; 
         private int? _projectStatusId; 
-        private ProjectStatus _projectStatus = new ProjectStatus(); 
+        private ProjectStatus _projectStatus; 
         private int? _companyId; 
-        private Company _company = new Company(); 
+        private Company _company; 
         private ObservableCollection<CustomField> _customFields; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -6655,8 +6820,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -6755,7 +6920,7 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private double? _size; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -6792,8 +6957,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -6893,14 +7058,14 @@ namespace HQ.API.SDK
         private string _name; 
         private string _number; 
         private int? _articleCategoryId; 
-        private ArticleBaseType _baseType; 
+        private ArticleBaseType? _baseType; 
         private string _description; 
         private ObservableCollection<CustomField> _customFields; 
         private int? _articleSalesPriceId; 
-        private ArticleSalesPrice _articleSalesPrice = new ArticleSalesPrice(); 
-        private ArticleCategory _articleCategory = new ArticleCategory(); 
+        private ArticleSalesPrice _articleSalesPrice; 
+        private ArticleCategory _articleCategory; 
         private ObservableCollection<ArticleSupplierQuotation> _articleSupplierQuotations; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -6950,7 +7115,8 @@ namespace HQ.API.SDK
         }
     
         [JsonProperty("BaseType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public ArticleBaseType BaseType
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ArticleBaseType? BaseType
         {
             get { return _baseType; }
             set 
@@ -7048,8 +7214,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7148,7 +7314,7 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private bool? _isMaster; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -7185,8 +7351,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7285,7 +7451,7 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private bool? _isInternal; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -7322,8 +7488,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7422,7 +7588,7 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private bool? _isInProgress; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -7459,8 +7625,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7558,13 +7724,13 @@ namespace HQ.API.SDK
     public partial class ArticleSalesPrice : INotifyPropertyChanged
     { 
         private double? _price; 
-        private ArticleSalesPriceCurrency _currency; 
+        private ArticleSalesPriceCurrency? _currency; 
         private double? _taxRate; 
         private double? _amount; 
         private string _unit; 
         private int? _articleId; 
         private ObservableCollection<ArticleDiscount> _articleDiscounts; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -7585,7 +7751,8 @@ namespace HQ.API.SDK
         }
     
         [JsonProperty("Currency", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public ArticleSalesPriceCurrency Currency
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ArticleSalesPriceCurrency? Currency
         {
             get { return _currency; }
             set 
@@ -7669,8 +7836,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7771,7 +7938,7 @@ namespace HQ.API.SDK
         private int? _parentId; 
         private string _description; 
         private string _abbreviation; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -7834,8 +8001,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -7937,13 +8104,13 @@ namespace HQ.API.SDK
         private double? _totalPrice; 
         private double? _minQuantity; 
         private string _number; 
-        private ArticleSupplierQuotationCurrency _currency; 
+        private ArticleSupplierQuotationCurrency? _currency; 
         private double? _exchangeRate; 
         private int? _articleId; 
         private int? _supplierId; 
-        private Company _supplier = new Company(); 
+        private Company _supplier; 
         private string _unit; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -8020,7 +8187,8 @@ namespace HQ.API.SDK
         }
     
         [JsonProperty("Currency", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public ArticleSupplierQuotationCurrency Currency
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ArticleSupplierQuotationCurrency? Currency
         {
             get { return _currency; }
             set 
@@ -8104,8 +8272,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -8204,10 +8372,10 @@ namespace HQ.API.SDK
     { 
         private double? _value; 
         private double? _threshold; 
-        private ArticleDiscountType _type; 
+        private ArticleDiscountType? _type; 
         private int? _companyId; 
         private int? _articleSalesPriceId; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -8242,7 +8410,8 @@ namespace HQ.API.SDK
         }
     
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public ArticleDiscountType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ArticleDiscountType? Type
         {
             get { return _type; }
             set 
@@ -8284,8 +8453,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -8441,7 +8610,7 @@ namespace HQ.API.SDK
         private int? _rightLevel; 
         private int? _projectTemplateId; 
         private bool? _isRequired; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -8504,8 +8673,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -8824,49 +8993,49 @@ namespace HQ.API.SDK
     { 
         private DateTime? _quotationDate; 
         private DateTime? _validUntilDate; 
-        private QuotationStatus _status; 
+        private QuotationStatus? _status; 
         private ObservableCollection<DocumentPosition> _positions; 
-        private QuotationCurrency _currency; 
+        private QuotationCurrency? _currency; 
         private double? _exchangeRate; 
         private DateTime? _deliveryDate; 
         private int? _paymentConditionId; 
         private int? _deliveryConditionId; 
-        private DocumentCondition _paymentCondition = new DocumentCondition(); 
-        private DocumentCondition _deliveryCondition = new DocumentCondition(); 
-        private QuotationDiscountType _discountType; 
+        private DocumentCondition _paymentCondition; 
+        private DocumentCondition _deliveryCondition; 
+        private QuotationDiscountType? _discountType; 
         private double? _discount; 
         private double? _margin; 
-        private QuotationTaxOption _taxOption; 
-        private QuotationServiceOption _serviceOption; 
+        private QuotationTaxOption? _taxOption; 
+        private QuotationServiceOption? _serviceOption; 
         private decimal? _netTotal; 
         private decimal? _grossTotal; 
         private decimal? _vatTotal; 
         private decimal? _paidTotal; 
-        private QuotationType _type; 
+        private QuotationType? _type; 
         private string _typeText; 
         private string _addressText; 
         private int? _companyAddressId; 
-        private CompanyAddress _companyAddress = new CompanyAddress(); 
+        private CompanyAddress _companyAddress; 
         private string _subject; 
         private string _header; 
         private string _footer; 
         private int? _documentTemplateId; 
         private string _number; 
         private int? _contactPersonId; 
-        private ContactPerson _contactPerson = new ContactPerson(); 
+        private ContactPerson _contactPerson; 
         private int? _companyId; 
-        private Company _company = new Company(); 
+        private Company _company; 
         private int? _internalContactPersonId; 
-        private User _internalContactPerson = new User(); 
+        private User _internalContactPerson; 
         private int? _leadId; 
-        private Lead _lead = new Lead(); 
+        private Lead _lead; 
         private string _syncId; 
         private int? _projectId; 
-        private Project _project = new Project(); 
+        private Project _project; 
         private string _note; 
         private string _language; 
-        private HQFile _documentFile = new HQFile(); 
-        private int? _id; 
+        private HQFile _documentFile; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -8904,7 +9073,8 @@ namespace HQ.API.SDK
     
         /// <summary>The status of this quotation</summary>
         [JsonProperty("Status", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationStatus Status
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationStatus? Status
         {
             get { return _status; }
             set 
@@ -8934,7 +9104,8 @@ namespace HQ.API.SDK
     
         /// <summary>The currency of this document.</summary>
         [JsonProperty("Currency", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationCurrency Currency
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationCurrency? Currency
         {
             get { return _currency; }
             set 
@@ -9039,7 +9210,8 @@ namespace HQ.API.SDK
     
         /// <summary>Whether the document discount is specified as a total or a percentage.</summary>
         [JsonProperty("DiscountType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationDiscountType DiscountType
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationDiscountType? DiscountType
         {
             get { return _discountType; }
             set 
@@ -9087,7 +9259,8 @@ namespace HQ.API.SDK
         /// <summary>The tax rule that should apply to this document. 
         ///             VAT is most commonly used for documents within the same country.</summary>
         [JsonProperty("TaxOption", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationTaxOption TaxOption
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationTaxOption? TaxOption
         {
             get { return _taxOption; }
             set 
@@ -9102,7 +9275,8 @@ namespace HQ.API.SDK
     
         /// <summary>Whether the positions in this document are a delivery or any other kind of service.</summary>
         [JsonProperty("ServiceOption", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationServiceOption ServiceOption
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationServiceOption? ServiceOption
         {
             get { return _serviceOption; }
             set 
@@ -9185,7 +9359,8 @@ namespace HQ.API.SDK
     
         /// <summary>The type of the document</summary>
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public QuotationType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public QuotationType? Type
         {
             get { return _type; }
             set 
@@ -9544,8 +9719,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -9700,12 +9875,12 @@ namespace HQ.API.SDK
         private DateTime _start; 
         private DateTime _end; 
         private string _typeText; 
-        private UserAbsenceType _type; 
+        private UserAbsenceType? _type; 
         private string _note; 
         private int _userId; 
-        private User _user = new User(); 
+        private User _user; 
         private bool? _isApproved; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -9760,7 +9935,8 @@ namespace HQ.API.SDK
     
         /// <summary>The type of this absence</summary>
         [JsonProperty("Type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public UserAbsenceType Type
+        [JsonConverter(typeof(StringEnumConverter))]
+        public UserAbsenceType? Type
         {
             get { return _type; }
             set 
@@ -9834,8 +10010,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -9990,18 +10166,18 @@ namespace HQ.API.SDK
     { 
         private string _note; 
         private int? _duration; 
-        private Task _task = new Task(); 
+        private Task _task; 
         private int? _userId; 
-        private User _user = new User(); 
+        private User _user; 
         private double? _chargeRateValue; 
         private double? _internalChargeRateValue; 
         private bool? _isApproved; 
         private DateTime? _startOn; 
         private int? _breakDuration; 
         private int? _projectId; 
-        private Project _project = new Project(); 
+        private Project _project; 
         private int? _taskId; 
-        private int? _id; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -10202,8 +10378,8 @@ namespace HQ.API.SDK
         }
     
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -10302,8 +10478,9 @@ namespace HQ.API.SDK
     { 
         private string _name; 
         private int? _projectId; 
-        private Project _project = new Project(); 
-        private int? _id; 
+        private Project _project; 
+        private TaskType _taskType; 
+        private int _id; 
         private int? _createdBy; 
         private int? _updatedBy; 
         private DateTime? _createdOn; 
@@ -10354,9 +10531,24 @@ namespace HQ.API.SDK
             }
         }
     
+        /// <summary>The tasktype of this task</summary>
+        [JsonProperty("TaskType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public TaskType TaskType
+        {
+            get { return _taskType; }
+            set 
+            {
+                if (_taskType != value)
+                {
+                    _taskType = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
         /// <summary>The unique identifier of this entity</summary>
-        [JsonProperty("Id", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public int? Id
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
         {
             get { return _id; }
             set 
@@ -10449,6 +10641,144 @@ namespace HQ.API.SDK
         }
     }
     
+    /// <summary>Every task in hq has a task type. it is a task classification and often used for different external invoicing chargrates</summary>
+    [JsonObject(MemberSerialization.OptIn)]
+    [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
+    public partial class TaskType : INotifyPropertyChanged
+    { 
+        private string _name; 
+        private bool? _isDefault; 
+        private int _id; 
+        private int? _createdBy; 
+        private int? _updatedBy; 
+        private DateTime? _createdOn; 
+        private DateTime? _updatedOn;
+    
+        /// <summary>The name of the tasktype</summary>
+        [JsonProperty("Name", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public string Name
+        {
+            get { return _name; }
+            set 
+            {
+                if (_name != value)
+                {
+                    _name = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>Is set, it's the default task type</summary>
+        [JsonProperty("IsDefault", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsDefault
+        {
+            get { return _isDefault; }
+            set 
+            {
+                if (_isDefault != value)
+                {
+                    _isDefault = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The unique identifier of this entity</summary>
+        [JsonProperty("Id", Required = Required.Always)]
+        public int Id
+        {
+            get { return _id; }
+            set 
+            {
+                if (_id != value)
+                {
+                    _id = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The id of the user who created this entity</summary>
+        [JsonProperty("CreatedBy", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public int? CreatedBy
+        {
+            get { return _createdBy; }
+            set 
+            {
+                if (_createdBy != value)
+                {
+                    _createdBy = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The id of the last user who modified this entity</summary>
+        [JsonProperty("UpdatedBy", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public int? UpdatedBy
+        {
+            get { return _updatedBy; }
+            set 
+            {
+                if (_updatedBy != value)
+                {
+                    _updatedBy = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The date and time this entity was created, in UTC</summary>
+        [JsonProperty("CreatedOn", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? CreatedOn
+        {
+            get { return _createdOn; }
+            set 
+            {
+                if (_createdOn != value)
+                {
+                    _createdOn = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        /// <summary>The last date and time this entity was updated, in UTC</summary>
+        [JsonProperty("UpdatedOn", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? UpdatedOn
+        {
+            get { return _updatedOn; }
+            set 
+            {
+                if (_updatedOn != value)
+                {
+                    _updatedOn = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        public event PropertyChangedEventHandler PropertyChanged;
+    
+        public string ToJson() 
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+        
+        public static TaskType FromJson(string data)
+        {
+            return JsonConvert.DeserializeObject<TaskType>(data);
+        }
+        
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) 
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+    
     [JsonObject(MemberSerialization.OptIn)]
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public partial class ODataResponseOfListOfUser : INotifyPropertyChanged
@@ -10505,699 +10835,995 @@ namespace HQ.API.SDK
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
-    public enum CompanyAddressStandardForDocumentType
+    public enum CompanyAddressDefaultForDocumentType
     {
-        _0 = 0,
+        [EnumMember(Value = "Quotation")]
+        Quotation = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Invoice")]
+        Invoice = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "DeliveryNote")]
+        DeliveryNote = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "Warning")]
+        Warning = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Reminder")]
+        Reminder = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "Cancellation")]
+        Cancellation = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "CreditNote")]
+        CreditNote = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "Confirmation")]
+        Confirmation = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "IncomingInvoice")]
+        IncomingInvoice = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "Undefined")]
+        Undefined = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "Order")]
+        Order = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PriceInquery")]
+        PriceInquery = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "Letter")]
+        Letter = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "Minute")]
+        Minute = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "Akonto")]
+        Akonto = 14,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum CustomFieldType
     {
-        _1 = 1,
+        [EnumMember(Value = "Text")]
+        Text = 0,
     
-        _2 = 2,
+        [EnumMember(Value = "TextMultiline")]
+        TextMultiline = 1,
     
-        _3 = 3,
+        [EnumMember(Value = "Date")]
+        Date = 2,
     
-        _4 = 4,
+        [EnumMember(Value = "Dropdown")]
+        Dropdown = 3,
     
-        _5 = 5,
+        [EnumMember(Value = "DropdownCheckbox")]
+        DropdownCheckbox = 4,
     
-        _6 = 6,
+        [EnumMember(Value = "Boolean")]
+        Boolean = 5,
     
-        _7 = 7,
+        [EnumMember(Value = "Upload")]
+        Upload = 6,
     
-        _8 = 8,
+        [EnumMember(Value = "UserSelection")]
+        UserSelection = 7,
     
-        _9 = 9,
+        [EnumMember(Value = "CompanySelection")]
+        CompanySelection = 8,
     
-        _10 = 10,
+        [EnumMember(Value = "ProjectSelection")]
+        ProjectSelection = 9,
     
-        _11 = 11,
+        [EnumMember(Value = "ResourceSelection")]
+        ResourceSelection = 10,
     
-        _12 = 12,
+        [EnumMember(Value = "ContactSelection")]
+        ContactSelection = 11,
     
-        _13 = 13,
+        [EnumMember(Value = "Link")]
+        Link = 12,
     
-        _14 = 14,
+        [EnumMember(Value = "Float")]
+        Float = 13,
     
-        _15 = 15,
+        [EnumMember(Value = "Integer")]
+        Integer = 14,
     
-        _16 = 16,
+        [EnumMember(Value = "Token")]
+        Token = 15,
     
-        _17 = 17,
+        [EnumMember(Value = "NumericText")]
+        NumericText = 16,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum CustomFieldDefinitionCategory
     {
-        _0 = 0,
+        [EnumMember(Value = "Undefined")]
+        Undefined = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Contact")]
+        Contact = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "ContactHistory")]
+        ContactHistory = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "User")]
+        User = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Company")]
+        Company = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "Lead")]
+        Lead = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "Article")]
+        Article = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "ArticleVersion")]
+        ArticleVersion = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "Project")]
+        Project = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "OrganisedEvent")]
+        OrganisedEvent = 9,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceStatus
     {
-        _0 = 0,
+        [EnumMember(Value = "Draft")]
+        Draft = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "WaitingForReview")]
+        WaitingForReview = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "Sent")]
+        Sent = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "PartlyPaid")]
+        PartlyPaid = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "CompletelyPaid")]
+        CompletelyPaid = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "Canceled")]
+        Canceled = 5,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceCurrency
     {
-        _0 = 0,
+        [EnumMember(Value = "NotSet")]
+        NotSet = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Euro")]
+        Euro = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "USDollar")]
+        USDollar = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "SwissFrancs")]
+        SwissFrancs = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "PoundSterling")]
+        PoundSterling = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "ChineseYuan")]
+        ChineseYuan = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "JapaneseYen")]
+        JapaneseYen = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "BulgarianLev")]
+        BulgarianLev = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "CzechRepublicKoruna")]
+        CzechRepublicKoruna = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "DanishKrone")]
+        DanishKrone = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "HungarianForint")]
+        HungarianForint = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PolishZloty")]
+        PolishZloty = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "RomanianLeu")]
+        RomanianLeu = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "SwedishKrona")]
+        SwedishKrona = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "NorwegianKrone")]
+        NorwegianKrone = 14,
     
-        _15 = 15,
+        [EnumMember(Value = "CroatianKuna")]
+        CroatianKuna = 15,
     
-        _16 = 16,
+        [EnumMember(Value = "RussianRuble")]
+        RussianRuble = 16,
     
-        _17 = 17,
+        [EnumMember(Value = "TurkishLira")]
+        TurkishLira = 17,
     
-        _18 = 18,
+        [EnumMember(Value = "AustralianDollar")]
+        AustralianDollar = 18,
     
-        _19 = 19,
+        [EnumMember(Value = "BrazilianReal")]
+        BrazilianReal = 19,
     
-        _20 = 20,
+        [EnumMember(Value = "CanadianDollar")]
+        CanadianDollar = 20,
     
-        _21 = 21,
+        [EnumMember(Value = "HongKongDollar")]
+        HongKongDollar = 21,
     
-        _22 = 22,
+        [EnumMember(Value = "IndonesianRupiah")]
+        IndonesianRupiah = 22,
     
-        _23 = 23,
+        [EnumMember(Value = "IsraeliNewSheqel")]
+        IsraeliNewSheqel = 23,
     
-        _24 = 24,
+        [EnumMember(Value = "IndianRupee")]
+        IndianRupee = 24,
     
-        _25 = 25,
+        [EnumMember(Value = "SouthKoreanWon")]
+        SouthKoreanWon = 25,
     
-        _26 = 26,
+        [EnumMember(Value = "MexicanPeso")]
+        MexicanPeso = 26,
     
-        _27 = 27,
+        [EnumMember(Value = "MalaysianRinggit")]
+        MalaysianRinggit = 27,
     
-        _28 = 28,
+        [EnumMember(Value = "NewZealandDollar")]
+        NewZealandDollar = 28,
     
-        _29 = 29,
+        [EnumMember(Value = "PhilippinePeso")]
+        PhilippinePeso = 29,
     
-        _30 = 30,
+        [EnumMember(Value = "SingaporeDollar")]
+        SingaporeDollar = 30,
     
-        _31 = 31,
+        [EnumMember(Value = "ThaiBaht")]
+        ThaiBaht = 31,
     
-        _32 = 32,
+        [EnumMember(Value = "SouthAfricanRand")]
+        SouthAfricanRand = 32,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceDiscountType
     {
-        _0 = 0,
+        [EnumMember(Value = "Percent")]
+        Percent = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "NetValue")]
+        NetValue = 1,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceTaxOption
     {
-        _0 = 0,
+        [EnumMember(Value = "VatApplicable")]
+        VatApplicable = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "FreeThirdCountryTerritory")]
+        FreeThirdCountryTerritory = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "FreeEuropeanUnionWithVatId")]
+        FreeEuropeanUnionWithVatId = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "FreeEuropeanUnionNoVatId")]
+        FreeEuropeanUnionNoVatId = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Inverse")]
+        Inverse = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "IntraCommunityDelivery")]
+        IntraCommunityDelivery = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "ExportDelivery")]
+        ExportDelivery = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "FreeOther")]
+        FreeOther = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "FreeYouthSupport")]
+        FreeYouthSupport = 8,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceServiceOption
     {
-        _0 = 0,
+        [EnumMember(Value = "None")]
+        None = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Delivery")]
+        Delivery = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "Service")]
+        Service = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "DeliveryAndService")]
+        DeliveryAndService = 3,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum InvoiceType
     {
-        _0 = 0,
+        [EnumMember(Value = "Quotation")]
+        Quotation = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Invoice")]
+        Invoice = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "DeliveryNote")]
+        DeliveryNote = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "Warning")]
+        Warning = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Reminder")]
+        Reminder = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "Cancellation")]
+        Cancellation = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "CreditNote")]
+        CreditNote = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "Confirmation")]
+        Confirmation = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "IncomingInvoice")]
+        IncomingInvoice = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "Undefined")]
+        Undefined = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "Order")]
+        Order = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PriceInquery")]
+        PriceInquery = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "Letter")]
+        Letter = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "Minute")]
+        Minute = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "Akonto")]
+        Akonto = 14,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum DocumentPositionType
     {
-        _0 = 0,
+        [EnumMember(Value = "Article")]
+        Article = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Freetext")]
+        Freetext = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "openPosition")]
+        OpenPosition = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "UserReporting")]
+        UserReporting = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "ProjectInvoice")]
+        ProjectInvoice = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "ProjectArticle")]
+        ProjectArticle = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "ProjectPlan")]
+        ProjectPlan = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "Subtotal")]
+        Subtotal = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "PositionGroup")]
+        PositionGroup = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "GroupHeader")]
+        GroupHeader = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "Textline")]
+        Textline = 10,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum ArticleBaseType
     {
-        _0 = 0,
+        [EnumMember(Value = "Stock")]
+        Stock = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Action")]
+        Action = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "Material")]
+        Material = 2,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum ArticleSalesPriceCurrency
     {
-        _0 = 0,
+        [EnumMember(Value = "NotSet")]
+        NotSet = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Euro")]
+        Euro = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "USDollar")]
+        USDollar = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "SwissFrancs")]
+        SwissFrancs = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "PoundSterling")]
+        PoundSterling = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "ChineseYuan")]
+        ChineseYuan = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "JapaneseYen")]
+        JapaneseYen = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "BulgarianLev")]
+        BulgarianLev = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "CzechRepublicKoruna")]
+        CzechRepublicKoruna = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "DanishKrone")]
+        DanishKrone = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "HungarianForint")]
+        HungarianForint = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PolishZloty")]
+        PolishZloty = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "RomanianLeu")]
+        RomanianLeu = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "SwedishKrona")]
+        SwedishKrona = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "NorwegianKrone")]
+        NorwegianKrone = 14,
     
-        _15 = 15,
+        [EnumMember(Value = "CroatianKuna")]
+        CroatianKuna = 15,
     
-        _16 = 16,
+        [EnumMember(Value = "RussianRuble")]
+        RussianRuble = 16,
     
-        _17 = 17,
+        [EnumMember(Value = "TurkishLira")]
+        TurkishLira = 17,
     
-        _18 = 18,
+        [EnumMember(Value = "AustralianDollar")]
+        AustralianDollar = 18,
     
-        _19 = 19,
+        [EnumMember(Value = "BrazilianReal")]
+        BrazilianReal = 19,
     
-        _20 = 20,
+        [EnumMember(Value = "CanadianDollar")]
+        CanadianDollar = 20,
     
-        _21 = 21,
+        [EnumMember(Value = "HongKongDollar")]
+        HongKongDollar = 21,
     
-        _22 = 22,
+        [EnumMember(Value = "IndonesianRupiah")]
+        IndonesianRupiah = 22,
     
-        _23 = 23,
+        [EnumMember(Value = "IsraeliNewSheqel")]
+        IsraeliNewSheqel = 23,
     
-        _24 = 24,
+        [EnumMember(Value = "IndianRupee")]
+        IndianRupee = 24,
     
-        _25 = 25,
+        [EnumMember(Value = "SouthKoreanWon")]
+        SouthKoreanWon = 25,
     
-        _26 = 26,
+        [EnumMember(Value = "MexicanPeso")]
+        MexicanPeso = 26,
     
-        _27 = 27,
+        [EnumMember(Value = "MalaysianRinggit")]
+        MalaysianRinggit = 27,
     
-        _28 = 28,
+        [EnumMember(Value = "NewZealandDollar")]
+        NewZealandDollar = 28,
     
-        _29 = 29,
+        [EnumMember(Value = "PhilippinePeso")]
+        PhilippinePeso = 29,
     
-        _30 = 30,
+        [EnumMember(Value = "SingaporeDollar")]
+        SingaporeDollar = 30,
     
-        _31 = 31,
+        [EnumMember(Value = "ThaiBaht")]
+        ThaiBaht = 31,
     
-        _32 = 32,
+        [EnumMember(Value = "SouthAfricanRand")]
+        SouthAfricanRand = 32,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum ArticleSupplierQuotationCurrency
     {
-        _0 = 0,
+        [EnumMember(Value = "NotSet")]
+        NotSet = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Euro")]
+        Euro = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "USDollar")]
+        USDollar = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "SwissFrancs")]
+        SwissFrancs = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "PoundSterling")]
+        PoundSterling = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "ChineseYuan")]
+        ChineseYuan = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "JapaneseYen")]
+        JapaneseYen = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "BulgarianLev")]
+        BulgarianLev = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "CzechRepublicKoruna")]
+        CzechRepublicKoruna = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "DanishKrone")]
+        DanishKrone = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "HungarianForint")]
+        HungarianForint = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PolishZloty")]
+        PolishZloty = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "RomanianLeu")]
+        RomanianLeu = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "SwedishKrona")]
+        SwedishKrona = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "NorwegianKrone")]
+        NorwegianKrone = 14,
     
-        _15 = 15,
+        [EnumMember(Value = "CroatianKuna")]
+        CroatianKuna = 15,
     
-        _16 = 16,
+        [EnumMember(Value = "RussianRuble")]
+        RussianRuble = 16,
     
-        _17 = 17,
+        [EnumMember(Value = "TurkishLira")]
+        TurkishLira = 17,
     
-        _18 = 18,
+        [EnumMember(Value = "AustralianDollar")]
+        AustralianDollar = 18,
     
-        _19 = 19,
+        [EnumMember(Value = "BrazilianReal")]
+        BrazilianReal = 19,
     
-        _20 = 20,
+        [EnumMember(Value = "CanadianDollar")]
+        CanadianDollar = 20,
     
-        _21 = 21,
+        [EnumMember(Value = "HongKongDollar")]
+        HongKongDollar = 21,
     
-        _22 = 22,
+        [EnumMember(Value = "IndonesianRupiah")]
+        IndonesianRupiah = 22,
     
-        _23 = 23,
+        [EnumMember(Value = "IsraeliNewSheqel")]
+        IsraeliNewSheqel = 23,
     
-        _24 = 24,
+        [EnumMember(Value = "IndianRupee")]
+        IndianRupee = 24,
     
-        _25 = 25,
+        [EnumMember(Value = "SouthKoreanWon")]
+        SouthKoreanWon = 25,
     
-        _26 = 26,
+        [EnumMember(Value = "MexicanPeso")]
+        MexicanPeso = 26,
     
-        _27 = 27,
+        [EnumMember(Value = "MalaysianRinggit")]
+        MalaysianRinggit = 27,
     
-        _28 = 28,
+        [EnumMember(Value = "NewZealandDollar")]
+        NewZealandDollar = 28,
     
-        _29 = 29,
+        [EnumMember(Value = "PhilippinePeso")]
+        PhilippinePeso = 29,
     
-        _30 = 30,
+        [EnumMember(Value = "SingaporeDollar")]
+        SingaporeDollar = 30,
     
-        _31 = 31,
+        [EnumMember(Value = "ThaiBaht")]
+        ThaiBaht = 31,
     
-        _32 = 32,
+        [EnumMember(Value = "SouthAfricanRand")]
+        SouthAfricanRand = 32,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum ArticleDiscountType
     {
-        _0 = 0,
+        [EnumMember(Value = "Percent")]
+        Percent = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "NetValue")]
+        NetValue = 1,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationStatus
     {
-        _0 = 0,
+        [EnumMember(Value = "Draft")]
+        Draft = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "WaitingForReview")]
+        WaitingForReview = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "Sent")]
+        Sent = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "Accepted")]
+        Accepted = 3,
     
-        _6 = 6,
+        [EnumMember(Value = "Declined")]
+        Declined = 4,
     
-        _7 = 7,
+        [EnumMember(Value = "Canceled")]
+        Canceled = 5,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationCurrency
     {
-        _0 = 0,
+        [EnumMember(Value = "NotSet")]
+        NotSet = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Euro")]
+        Euro = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "USDollar")]
+        USDollar = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "SwissFrancs")]
+        SwissFrancs = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "PoundSterling")]
+        PoundSterling = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "ChineseYuan")]
+        ChineseYuan = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "JapaneseYen")]
+        JapaneseYen = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "BulgarianLev")]
+        BulgarianLev = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "CzechRepublicKoruna")]
+        CzechRepublicKoruna = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "DanishKrone")]
+        DanishKrone = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "HungarianForint")]
+        HungarianForint = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PolishZloty")]
+        PolishZloty = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "RomanianLeu")]
+        RomanianLeu = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "SwedishKrona")]
+        SwedishKrona = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "NorwegianKrone")]
+        NorwegianKrone = 14,
     
-        _15 = 15,
+        [EnumMember(Value = "CroatianKuna")]
+        CroatianKuna = 15,
     
-        _16 = 16,
+        [EnumMember(Value = "RussianRuble")]
+        RussianRuble = 16,
     
-        _17 = 17,
+        [EnumMember(Value = "TurkishLira")]
+        TurkishLira = 17,
     
-        _18 = 18,
+        [EnumMember(Value = "AustralianDollar")]
+        AustralianDollar = 18,
     
-        _19 = 19,
+        [EnumMember(Value = "BrazilianReal")]
+        BrazilianReal = 19,
     
-        _20 = 20,
+        [EnumMember(Value = "CanadianDollar")]
+        CanadianDollar = 20,
     
-        _21 = 21,
+        [EnumMember(Value = "HongKongDollar")]
+        HongKongDollar = 21,
     
-        _22 = 22,
+        [EnumMember(Value = "IndonesianRupiah")]
+        IndonesianRupiah = 22,
     
-        _23 = 23,
+        [EnumMember(Value = "IsraeliNewSheqel")]
+        IsraeliNewSheqel = 23,
     
-        _24 = 24,
+        [EnumMember(Value = "IndianRupee")]
+        IndianRupee = 24,
     
-        _25 = 25,
+        [EnumMember(Value = "SouthKoreanWon")]
+        SouthKoreanWon = 25,
     
-        _26 = 26,
+        [EnumMember(Value = "MexicanPeso")]
+        MexicanPeso = 26,
     
-        _27 = 27,
+        [EnumMember(Value = "MalaysianRinggit")]
+        MalaysianRinggit = 27,
     
-        _28 = 28,
+        [EnumMember(Value = "NewZealandDollar")]
+        NewZealandDollar = 28,
     
-        _29 = 29,
+        [EnumMember(Value = "PhilippinePeso")]
+        PhilippinePeso = 29,
     
-        _30 = 30,
+        [EnumMember(Value = "SingaporeDollar")]
+        SingaporeDollar = 30,
     
-        _31 = 31,
+        [EnumMember(Value = "ThaiBaht")]
+        ThaiBaht = 31,
     
-        _32 = 32,
+        [EnumMember(Value = "SouthAfricanRand")]
+        SouthAfricanRand = 32,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationDiscountType
     {
-        _0 = 0,
+        [EnumMember(Value = "Percent")]
+        Percent = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "NetValue")]
+        NetValue = 1,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationTaxOption
     {
-        _0 = 0,
+        [EnumMember(Value = "VatApplicable")]
+        VatApplicable = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "FreeThirdCountryTerritory")]
+        FreeThirdCountryTerritory = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "FreeEuropeanUnionWithVatId")]
+        FreeEuropeanUnionWithVatId = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "FreeEuropeanUnionNoVatId")]
+        FreeEuropeanUnionNoVatId = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Inverse")]
+        Inverse = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "IntraCommunityDelivery")]
+        IntraCommunityDelivery = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "ExportDelivery")]
+        ExportDelivery = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "FreeOther")]
+        FreeOther = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "FreeYouthSupport")]
+        FreeYouthSupport = 8,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationServiceOption
     {
-        _0 = 0,
+        [EnumMember(Value = "None")]
+        None = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Delivery")]
+        Delivery = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "Service")]
+        Service = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "DeliveryAndService")]
+        DeliveryAndService = 3,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum QuotationType
     {
-        _0 = 0,
+        [EnumMember(Value = "Quotation")]
+        Quotation = 0,
     
-        _1 = 1,
+        [EnumMember(Value = "Invoice")]
+        Invoice = 1,
     
-        _2 = 2,
+        [EnumMember(Value = "DeliveryNote")]
+        DeliveryNote = 2,
     
-        _3 = 3,
+        [EnumMember(Value = "Warning")]
+        Warning = 3,
     
-        _4 = 4,
+        [EnumMember(Value = "Reminder")]
+        Reminder = 4,
     
-        _5 = 5,
+        [EnumMember(Value = "Cancellation")]
+        Cancellation = 5,
     
-        _6 = 6,
+        [EnumMember(Value = "CreditNote")]
+        CreditNote = 6,
     
-        _7 = 7,
+        [EnumMember(Value = "Confirmation")]
+        Confirmation = 7,
     
-        _8 = 8,
+        [EnumMember(Value = "IncomingInvoice")]
+        IncomingInvoice = 8,
     
-        _9 = 9,
+        [EnumMember(Value = "Undefined")]
+        Undefined = 9,
     
-        _10 = 10,
+        [EnumMember(Value = "Order")]
+        Order = 10,
     
-        _11 = 11,
+        [EnumMember(Value = "PriceInquery")]
+        PriceInquery = 11,
     
-        _12 = 12,
+        [EnumMember(Value = "Letter")]
+        Letter = 12,
     
-        _13 = 13,
+        [EnumMember(Value = "Minute")]
+        Minute = 13,
     
-        _14 = 14,
+        [EnumMember(Value = "Akonto")]
+        Akonto = 14,
     
     }
     
     [GeneratedCode("NJsonSchema", "4.12.6105.20733")]
     public enum UserAbsenceType
     {
-        _1 = 1,
+        [EnumMember(Value = "Project")]
+        Project = 0,
     
-        _2 = 2,
+        [EnumMember(Value = "ContactHistory")]
+        ContactHistory = 1,
     
-        _3 = 3,
+        [EnumMember(Value = "File")]
+        File = 2,
     
-        _4 = 4,
+        [EnumMember(Value = "Private")]
+        Private = 3,
     
-        _5 = 5,
+        [EnumMember(Value = "Lead")]
+        Lead = 4,
     
-        _6 = 6,
+        [EnumMember(Value = "Illness")]
+        Illness = 5,
     
-        _7 = 7,
+        [EnumMember(Value = "PaidLeave")]
+        PaidLeave = 6,
     
-        _8 = 8,
+        [EnumMember(Value = "ProfessionalAbsence")]
+        ProfessionalAbsence = 7,
     
-        _9 = 9,
+        [EnumMember(Value = "TaskTemplate")]
+        TaskTemplate = 8,
     
-        _10 = 10,
+        [EnumMember(Value = "PrivateAbsence")]
+        PrivateAbsence = 9,
     
-        _11 = 11,
+        [EnumMember(Value = "OvertimeReduction")]
+        OvertimeReduction = 10,
     
-        _12 = 12,
+        [EnumMember(Value = "PrivateAppointment")]
+        PrivateAppointment = 11,
     
-        _13 = 13,
+        [EnumMember(Value = "PublicAppointment")]
+        PublicAppointment = 12,
     
-        _14 = 14,
+        [EnumMember(Value = "Outage")]
+        Outage = 13,
     
-        _15 = 15,
+        [EnumMember(Value = "Maintenance")]
+        Maintenance = 14,
     
-        _16 = 16,
+        [EnumMember(Value = "ConstructionWork")]
+        ConstructionWork = 15,
     
-        _17 = 17,
+        [EnumMember(Value = "OtherLeave")]
+        OtherLeave = 16,
     
-        _18 = 18,
+        [EnumMember(Value = "RiskTask")]
+        RiskTask = 17,
     
-        _19 = 19,
+        [EnumMember(Value = "ChecklistItem")]
+        ChecklistItem = 18,
     
-        _20 = 20,
+        [EnumMember(Value = "ArticleTask")]
+        ArticleTask = 19,
     
-        _21 = 21,
+        [EnumMember(Value = "ChecklistItemTemplate")]
+        ChecklistItemTemplate = 20,
     
-        _22 = 22,
+        [EnumMember(Value = "Checklist")]
+        Checklist = 21,
     
-        _23 = 23,
+        [EnumMember(Value = "ChecklistTemplate")]
+        ChecklistTemplate = 22,
     
-        _24 = 24,
+        [EnumMember(Value = "RecurrencyTask")]
+        RecurrencyTask = 23,
     
-        _25 = 25,
+        [EnumMember(Value = "RecurrencyException")]
+        RecurrencyException = 24,
     
-        _26 = 26,
+        [EnumMember(Value = "Document")]
+        Document = 25,
     
-        _27 = 27,
+        [EnumMember(Value = "UnplannedAppointment")]
+        UnplannedAppointment = 26,
     
-        _28 = 28,
+        [EnumMember(Value = "FurtherEducation")]
+        FurtherEducation = 27,
     
-        _29 = 29,
+        [EnumMember(Value = "ProfessionalSchool")]
+        ProfessionalSchool = 28,
     
-        _30 = 30,
+        [EnumMember(Value = "SpecialLeave")]
+        SpecialLeave = 29,
     
-        _32 = 32,
+        [EnumMember(Value = "ParentalLeave")]
+        ParentalLeave = 30,
     
-        _33 = 33,
+        [EnumMember(Value = "UnpaidLeave")]
+        UnpaidLeave = 31,
     
-        _34 = 34,
+        [EnumMember(Value = "PrivateRecurrencyTask")]
+        PrivateRecurrencyTask = 32,
     
-        _35 = 35,
+        [EnumMember(Value = "UnpaidIllness")]
+        UnpaidIllness = 33,
     
     }
 
