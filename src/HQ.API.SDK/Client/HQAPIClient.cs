@@ -1,28 +1,22 @@
 ﻿using Config;
-using DotNetOpenAuth.OAuth2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HQ.API.SDK
 {
+    /// <summary>
+    /// The HQ API Client provides access to the resources of the HQ API.
+    /// </summary>
     public partial class HQAPIClient
     {
         private HQAPIClientConfiguration _configuration { get; set; }
 
+        /// <summary>
+        /// Creates a new client with the provided client configuration.
+        /// </summary>
+        /// <param name="configuration"></param>
         public HQAPIClient(HQAPIClientConfiguration configuration) : this(configuration.BaseUrl)
         {
             _configuration = configuration;
-            //authServer = new AuthorizationServerDescription()
-            //{
-            //    AuthorizationEndpoint = new Uri(configuration.BaseUrl + AuthorizeUrl),
-            //    TokenEndpoint = new Uri(configuration.BaseUrl + TokenUrl),
-            //};
-            //client = new WebServerClient(authServer, clientId, clientSecret);
         }
 
         /// <summary>
@@ -32,11 +26,6 @@ namespace HQ.API.SDK
         public void SetConfiguration(HQAPIClientConfiguration configuration)
         {
             _configuration = configuration;
-            authServer = new AuthorizationServerDescription()
-            {
-                AuthorizationEndpoint = new Uri(configuration.BaseUrl + AuthorizeUrl),
-                TokenEndpoint = new Uri(configuration.BaseUrl + TokenUrl),
-            };
         }
 
         /// <summary>
@@ -50,58 +39,14 @@ namespace HQ.API.SDK
                 request.DefaultRequestHeaders.Add("Authorization", _configuration.GetCurrentCredentials().GetAuthorizationCode());
         }
 
+        /// <summary>
+        /// Processes the response before it is being parsed
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
         partial void ProcessResponse(HttpClient request, HttpResponseMessage response)
         {
 
         }
-
-        #region OAuth 2.0
-
-        private const string AuthorizeUrl = "Account/Authorize";
-        private const string TokenUrl = "Token";
-        private readonly string clientId = "591379-hqsb";
-        private readonly string clientSecret = "hqsb";
-        private readonly WebServerClient client;
-
-        private AuthorizationServerDescription authServer;
-
-        public async void Index(string go)
-        {
-            if (!String.IsNullOrWhiteSpace(go))
-            {
-                var response = await client.PrepareRequestUserAuthorizationAsync(new[] { "Read.Contacts" });
-
-                Console.WriteLine(response.RequestMessage);
-                //client.RequestUserAuthorization(new[] { "Read.Contacts" },
-                //new Uri(Url.Action("Exchange", "Home", null,
-                //Request.Url.Scheme)));
-            }
-        }
-        //public void Exchange()
-        //{
-        //    var authorization = client.ProcessUserAuthorization();
-        //    if (authorization != null)
-        //    {
-        //        if (authorization.AccessTokenExpirationUtc.HasValue)
-        //            client.RefreshAuthorization(authorization, TimeSpan.FromSeconds(30));
-        //        string token = authorization.AccessToken;
-        //        string result = String.Empty;
-        //        using (HttpClient httpClient = new HttpClient())
-        //        {
-        //            httpClient.DefaultRequestHeaders.Authorization = new
-        //            AuthenticationHeaderValue("Bearer", token);
-        //            var apiResponse = httpClient.GetAsync(
-        //            "http://www.my-contacts.com/contacts/api/contacts").Result;
-        //            if (apiResponse.IsSuccessStatusCode)
-        //            {
-        //                result = apiResponse.Content.ReadAsStringAsync().Result;
-        //                var contacts = JsonConvert.DeserializeObject<IEnumerable<Contact>>
-        //                (result);
-        //                return View(contacts);
-        //            }
-        //        }
-        //    }
-        //}
-        #endregion
     }
 }

@@ -3,18 +3,19 @@ using Config;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Authentication
 {
+    /// <summary>
+    /// The OAuth Token Manager handles the lifecycle of access and refresh tokens for a particular user.
+    /// When created with a pre-shared access and refresh token, the token manager automatically refreshes the token when it expires.
+    /// When created without a pre-shared access and refresh token, the tokens can be retrieved by first acquiring an authorization code and then exchanging it for an access token. 
+    /// </summary>
     public class OAuthTokenManager
     {
         private HQAPIClientConfiguration Configuration { get; set; }
-        private const string AccessPath = "/Account/Authorize";
+        private const string AuthorizePath = "/Account/Authorize";
         private const string TokenPath = "/Token";
 
         private int CustomerId { get; set; }
@@ -24,6 +25,12 @@ namespace Authentication
         private string CurrentRefreshToken { get; set; }
         private DateTime? ExpiresOn { get; set; }
 
+        /// <summary>
+        /// Creates a new token manager without pre-shared access token and refresh token.
+        /// </summary>
+        /// <param name="configuration">The client configuration containing the base URL, among others</param>
+        /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
+        /// <param name="appSecret">The app secret of this client</param>
         public OAuthTokenManager(HQAPIClientConfiguration configuration, string appId, string appSecret)
         {
             if (!appId.Contains("-"))
@@ -34,7 +41,16 @@ namespace Authentication
             CustomerId = int.Parse(AppId.Split('-')[0]);
             AppSecret = appSecret;
         }
-        
+
+        /// <summary>
+        /// Creates a new token manager without pre-shared access token and refresh token.
+        /// </summary>
+        /// <param name="configuration">The client configuration containing the base URL, among others</param>
+        /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
+        /// <param name="appSecret">The app secret of this client</param>
+        /// <param name="accessToken">The pre-shared access token (typically of the Sync User) or an already existing access token from a previous session</param>
+        /// <param name="refreshToken">The pre-shared refresh token (typically of the Sync User) or an already existing refresh token from a previous session</param>
+        /// <param name="expiresOn">The expiration date of the access token</param>
         public OAuthTokenManager(HQAPIClientConfiguration configuration, string appId, string appSecret, string accessToken, string refreshToken, DateTime expiresOn)
             : this(configuration, appId, appSecret)
         {
@@ -45,6 +61,9 @@ namespace Authentication
 
         #region Events
 
+        /// <summary>
+        /// Fired when a new access token and refresh token were retrieved.
+        /// </summary>
         public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed;
         protected void OnTokenRefreshed(TokenRefreshedEventArgs e)
         {
@@ -80,6 +99,50 @@ namespace Authentication
 
             return new Authentication.BearerTokenCredentials(CurrentAccessToken);
         }
+
+        #region AccessToken
+
+        /// <summary>
+        /// Assembles the authorization URL for the specified parameters. 
+        /// Direct a user agent to this URL, wait for the user to sign in and extract the authorization code from the redirected URL.
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="state"></param>
+        /// <param name="redirectUri"></param>
+        /// <param name="scopes"></param>
+        /// <returns></returns>
+        public static string GetAuthorizeUrl(string appId, string state, string redirectUri, string[] scopes)
+        {
+            var escapedUri = Uri.EscapeDataString(redirectUri);
+            var scopeString = string.Join(" ", scopes);
+            return string.Format("{0}?response_type=code&client_id={1}&state={2}&redirect_uri={3}&scope={4}", AuthorizePath, appId, state, escapedUri, scopeString);
+        }
+
+        /// <summary>
+        /// Tries to get an access token with the provided authorization code.
+        /// If an access token was retrieved, the access token and refresh token are stored in the token manager an will be used for subsequent requests.
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="appSecret"></param>
+        /// <param name="authorizationCode"></param>
+        /// <returns></returns>
+        public AccessTokenWrapper GetAccessToken(string appId, string appSecret, string authorizationCode)
+        {
+            var accessTokenWrapper = GetAccessToken(appId, appSecret, "authorization_code", "code", authorizationCode);
+
+            if (accessTokenWrapper != null)
+            {
+                this.CurrentAccessToken = accessTokenWrapper.AccessToken;
+                this.CurrentRefreshToken = accessTokenWrapper.RefreshToken;
+                this.ExpiresOn = DateTime.UtcNow.Add(accessTokenWrapper.GetExpirationTimeSpan());
+
+                OnTokenRefreshed(new TokenRefreshedEventArgs(accessTokenWrapper));
+            }
+
+            return accessTokenWrapper;
+        }
+
+        #endregion
 
         #region REST
 
@@ -143,29 +206,14 @@ namespace Authentication
         }
 
         /// <summary>
-        /// Tries to get an access token with the provided authorization code.
-        /// If an access token was retrieved, the access token and refresh token are stored in the token manager an will be used for subsequent requests.
+        /// Actually performs the request to the Token endpoint.
         /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="appSecret"></param>
-        /// <param name="authorizationCode"></param>
+        /// <param name="appId">The app id of this client</param>
+        /// <param name="appSecret">The app secret of this client</param>
+        /// <param name="grantType">The OAuth grant type</param>
+        /// <param name="tokenType">The OAuth token type</param>
+        /// <param name="code">The authorization code or refresh token</param>
         /// <returns></returns>
-        public AccessTokenWrapper GetAccessToken(string appId, string appSecret, string authorizationCode)
-        {
-            var accessTokenWrapper = GetAccessToken(appId, appSecret, "authorization_code", "code", authorizationCode);
-
-            if (accessTokenWrapper != null)
-            {
-                this.CurrentAccessToken = accessTokenWrapper.AccessToken;
-                this.CurrentRefreshToken = accessTokenWrapper.RefreshToken;
-                this.ExpiresOn = DateTime.UtcNow.Add(accessTokenWrapper.GetExpirationTimeSpan());
-
-                OnTokenRefreshed(new TokenRefreshedEventArgs(accessTokenWrapper));
-            }
-
-            return accessTokenWrapper;
-        }
-
         private AccessTokenWrapper GetAccessToken(string appId, string appSecret, string grantType, string tokenType, string code)
         {
             var client = new RestClient(Configuration.BaseUrl);
