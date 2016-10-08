@@ -113,7 +113,7 @@ limitations under the License.
     <Compile Include="Authentication\IAPICredentials.cs" />
     <Compile Include="Authentication\OAuthTokenManager.cs" />
     <Compile Include="Authentication\TokenRefreshedEventArgs.cs" />
-    <Compile Include="Authentication\Wrapper\RefreshTokenWrapper.cs" />
+    <Compile Include="Authentication\Wrapper\AccessTokenWrapper.cs" />
     <Compile Include="Client\HQAPIClient.cs" />
     <Compile Include="Client\HQAPIClient_generated.cs" />
     <Compile Include="Config\HQAPIClientConfiguration.cs" />
