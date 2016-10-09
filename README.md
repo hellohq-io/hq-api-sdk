@@ -1,10 +1,10 @@
-# HQ API SDK - the C# library for the HQ API Entities
+# HQ API SDK - the C# library for the HQ API
 
 
-This C# SDK allows convenient access to the HQ API (Preview).
+This C# SDK allows convenient access to the HQ API.
 
 - API version: v1
-- SDK version: 1.0.0
+- SDK version: 1.1.0
 
 ## Frameworks supported
 - .NET 4.0 or later
@@ -25,158 +25,129 @@ NOTE: RestSharp versions greater than 105.1.0 have a bug which causes file uploa
 
 Then include the DLL (under the `bin` folder) in the C# project, and use the namespaces:
 ```csharp
-using HQ.API.SDK.Api;
-using HQ.API.SDK.Client;
-using HQ.API.SDK.Model;
+using HQ.API.SDK.Authentication;
+using HQ.API.SDK.Config;
 ```
 
 ## Getting Started
 
+The following sample shows the basic usage of the SDK. 
+You need to provide the AppId and AppSecret for your client application, which you need to register in the HQ administration panel of your system.
+
+This sample uses the pre-shared Access Token for the SyncUser, which is used for non-personal access. The token can be retrieved in the administration panel of your HQ system.
+Read more about authentication in the section below.
+
 ```csharp
+using Authentication;
+using Config;
 using System;
-using System.Diagnostics;
-using HQ.API.SDK.Api;
-using HQ.API.SDK.Client;
-using HQ.API.SDK.Model;
 
-namespace Example
+namespace HQ.API.SDK.Sample
 {
-    public class Example
+    public class CompanyAPISample
     {
-        public void main()
+        static void Main(string[] args)
         {
-            // Initial configuration
-            Configuration.Default = new Configuration(
-                baseUrl: "https://yourcompany.hqlabs.de/apiv1",
-                username: "your-api-user",
-                password: "your-api-key");
+            // Create a client configuration with an OAuth Token Manager, using the pre-shared Access Token fpr the SyncUser
+            var config = new HQAPIClientConfiguration("https://api.hqlabs.de");
+            var manager = config.CreateOAuthTokenManager("AppId", "AppSecret",
+                "SyncUser-AccessToken");
 
-            // Access to the companies api
-            CompaniesApi companiesApi = new CompaniesApi();
+            // Register a callback for when the token was refreshed
+            manager.TokenRefreshed += Manager_TokenRefreshed;
 
-            // Get one company by id
-            Company companyById = companiesApi.CompaniesV1GetById(56);
-            Console.WriteLine("Id {0}: {1}", companyById.Id, companyById.Name);
+            // Create the client with the configuration
+            var client = new HQAPIClient(config);
 
-            // Change the company name and update it through the api
-            companyById.Name = "New Name";
-            companiesApi.CompaniesV1PutById(companyById.Id, companyById);
+            // Get a company by id
+            var companyById = client.CompaniesV1_GetByIdAsync(1234).Result;
+            Console.WriteLine("Company by Id: " + companyById.Name);
 
-            // Various filters on the companies
-            //var companies = companiesApi.CompaniesV1Get();
-            //var companies = companiesApi.CompaniesV1Get(filter: "Id eq 65020");
-            //var companies = companiesApi.CompaniesV1Get(filter: "indexof(Name, 'EU') ge 0");
-            var companies = companiesApi.CompaniesV1Get(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00");
-            //var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes");
-            //var companies = companiesApi.CompaniesV1Get(expand: "CompanyTypes", filter:"CompanyTypes/any(companyType: companyType/Name eq 'Kunde')");
+            // Modify the company name and save it using a PUT
+            companyById.Name = companyById.Name + " (API)";
+            companyById = client.CompaniesV1_PutByIdAsync(companyById.Id, companyById).Result;
 
-            // Print the company results
-            var count = 1;
-            foreach (var company in companies)
+            // Create a new company with a default address and a company type
+            var newCompany = new Company()
             {
-                Console.WriteLine("{0}: {1}", count++, company.Name);
-
-                if (company.CompanyTypes != null)
+                Name = "Unit Corp.",
+                DebitorNumber = 3456,
+                CreditorNumber = 1234,
+                Description = "A test corporation",
+                IndustrialSector = "Testing",
+                DefaultAddress = new CompanyAddress()
                 {
-                    foreach (var companyType in company.CompanyTypes)
+                    Street = "Am Kaiserkai 70",
+                    City = "Hamburg",
+                    Country = "DE",
+                    DefaultForDocumentType = CompanyAddressDefaultForDocumentType.Invoice,
+                },
+                CompanyTypes = new System.Collections.ObjectModel.ObservableCollection<CompanyTypeOfCompany>()
+                {
+                    new CompanyTypeOfCompany()
                     {
-                        Console.WriteLine(" => {0}", companyType.Name);
+                        Id = 1, // Here, 1 is the Id of type 'Customer'
+                    }
+                }
+            };
+
+            // POST the new company to create it
+            var newCompanyResult = client.CompaniesV1_PostAsync(newCompany).Result;
+            Console.WriteLine("New Company Id: " + newCompanyResult.Id);
+
+            // Delete the new company
+            var deletedCompany = client.CompaniesV1_DeleteByIdAsync(newCompanyResult.Id).Result;
+
+            // Various filter and expand examples. See the OData docs for more information
+            var companies = client.CompaniesV1_GetAsync().Result; // Get all companies
+            //var companies = client.CompaniesV1_GetAsync(filter: "Id eq 1234").Result; // Get a company with a filter by Id
+            //var companies = client.CompaniesV1_GetAsync(filter: "indexof(Name, 'Corp') ge 0").Result; // Get all companies where the name contains 'Corp'
+            //var companies = client.CompaniesV1_GetAsync(filter: "UpdatedOn gt 2016-02-15T14:17:40+01:00").Result; // Get all companies modified after 15th of February 2016
+            //var companies = client.CompaniesV1_GetAsync(expand: "CompanyTypes").Result; // Get all companies with their company types
+            //var companies = client.CompaniesV1_GetAsync(expand: "CompanyTypes", filter: "CompanyTypes/any(companyType: companyType/Name eq 'Customer')").Result; // Returns all companies of type 'Customer'
+
+            // Display the results
+            foreach (var item in companies)
+            {
+                Console.WriteLine(item.Id + ": " + item.Name);
+                if (item.CompanyTypes != null)
+                {
+                    foreach (var companyType in item.CompanyTypes)
+                    {
+                        Console.WriteLine("    " + companyType.Name);
                     }
                 }
             }
+
+            // Wait to show the results
+            Console.ReadLine();
+        }
+
+        private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
+        {
+            // Store access and refresh token securely so they can be used again next time
         }
     }
 }
+
 ```
 
 <a name="documentation-for-api-endpoints"></a>
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://yourcompany.hqlabs.de/apiv1*
+All URIs are relative to *https://api.hqlabs.de/*
 
-Class | Method | HTTP request | Description
------------- | ------------- | ------------- | -------------
-*CompaniesApi* | [**CompaniesV1DeleteById**](docs/CompaniesApi.md#companiesv1deletebyid) | **DELETE** /api/v1/Companies({Id}) | Deletes a company
-*CompaniesApi* | [**CompaniesV1Get**](docs/CompaniesApi.md#companiesv1get) | **GET** /api/v1/Companies | Returns all companies
-*CompaniesApi* | [**CompaniesV1GetById**](docs/CompaniesApi.md#companiesv1getbyid) | **GET** /api/v1/Companies({Id}) | Returns the company with the specified id
-*CompaniesApi* | [**CompaniesV1Post**](docs/CompaniesApi.md#companiesv1post) | **POST** /api/v1/Companies | Creates a new company
-*CompaniesApi* | [**CompaniesV1PutById**](docs/CompaniesApi.md#companiesv1putbyid) | **PUT** /api/v1/Companies({Id}) | Updates an existing company
-*CompanyAddressesApi* | [**CompanyAddressesV1Get**](docs/CompanyAddressesApi.md#companyaddressesv1get) | **GET** /api/v1/CompanyAddresses | Returns all company addresses
-*CompanyAddressesApi* | [**CompanyAddressesV1GetById**](docs/CompanyAddressesApi.md#companyaddressesv1getbyid) | **GET** /api/v1/CompanyAddresses({Id}) | Returns the company address with the specified id
-*CompanyTypesApi* | [**CompanyTypesV1Get**](docs/CompanyTypesApi.md#companytypesv1get) | **GET** /api/v1/CompanyTypes | Returns all company types
-*CompanyTypesApi* | [**CompanyTypesV1GetById**](docs/CompanyTypesApi.md#companytypesv1getbyid) | **GET** /api/v1/CompanyTypes({Id}) | Returns the company type with the specified id
-*ContactPersonsApi* | [**ContactPersonsV1Get**](docs/ContactPersonsApi.md#contactpersonsv1get) | **GET** /api/v1/ContactPersons | Returns all project roles
-*ContactPersonsApi* | [**ContactPersonsV1GetById**](docs/ContactPersonsApi.md#contactpersonsv1getbyid) | **GET** /api/v1/ContactPersons({Id}) | Returns the contact person with the specified id
-*CustomFieldDefinitionsApi* | [**CustomFieldDefinitionsV1Get**](docs/CustomFieldDefinitionsApi.md#customfielddefinitionsv1get) | **GET** /api/v1/CustomFieldDefinitions | Returns all customfield definitions
-*CustomFieldDefinitionsApi* | [**CustomFieldDefinitionsV1GetById**](docs/CustomFieldDefinitionsApi.md#customfielddefinitionsv1getbyid) | **GET** /api/v1/CustomFieldDefinitions({Id}) | Returns the custom field definition with the specified id
-*ProjectRolesApi* | [**ProjectRolesV1Get**](docs/ProjectRolesApi.md#projectrolesv1get) | **GET** /api/v1/ProjectRoles | Returns all project roles
-*ProjectRolesApi* | [**ProjectRolesV1GetById**](docs/ProjectRolesApi.md#projectrolesv1getbyid) | **GET** /api/v1/ProjectRoles({Id}) | Returns all project roles
-*ProjectStatusApi* | [**ProjectStatusV1Get**](docs/ProjectStatusApi.md#projectstatusv1get) | **GET** /api/v1/ProjectStatus | Returns all project status
-*ProjectStatusApi* | [**ProjectStatusV1GetById**](docs/ProjectStatusApi.md#projectstatusv1getbyid) | **GET** /api/v1/ProjectStatus({Id}) | Returns all project status
-*ProjectTemplatesApi* | [**ProjectTemplatesV1Get**](docs/ProjectTemplatesApi.md#projecttemplatesv1get) | **GET** /api/v1/ProjectTemplates | Returns all project templates
-*ProjectTemplatesApi* | [**ProjectTemplatesV1GetById**](docs/ProjectTemplatesApi.md#projecttemplatesv1getbyid) | **GET** /api/v1/ProjectTemplates({Id}) | Returns all project templates
-*ProjectsApi* | [**ProjectsV1Get**](docs/ProjectsApi.md#projectsv1get) | **GET** /api/v1/Projects | Returns all projects
-*ProjectsApi* | [**ProjectsV1GetById**](docs/ProjectsApi.md#projectsv1getbyid) | **GET** /api/v1/Projects({Id}) | Returns the project with the specified id
-*QuotationsApi* | [**QuotationsV1Get**](docs/QuotationsApi.md#quotationsv1get) | **GET** /api/v1/Quotations | Returns all quotations
-*QuotationsApi* | [**QuotationsV1GetById**](docs/QuotationsApi.md#quotationsv1getbyid) | **GET** /api/v1/Quotations({Id}) | Returns all quotations
-*UserAbsencesApi* | [**UserAbsencesV1DeleteById**](docs/UserAbsencesApi.md#userabsencesv1deletebyid) | **DELETE** /api/v1/UserAbsences({Id}) | Deletes an absence
-*UserAbsencesApi* | [**UserAbsencesV1Get**](docs/UserAbsencesApi.md#userabsencesv1get) | **GET** /api/v1/UserAbsences | Returns all absences
-*UserAbsencesApi* | [**UserAbsencesV1GetById**](docs/UserAbsencesApi.md#userabsencesv1getbyid) | **GET** /api/v1/UserAbsences({Id}) | Returns all absences
-*UserAbsencesApi* | [**UserAbsencesV1Post**](docs/UserAbsencesApi.md#userabsencesv1post) | **POST** /api/v1/UserAbsences | Creates a new absence
-*UserReportingsApi* | [**UserReportingsV1DeleteById**](docs/UserReportingsApi.md#userreportingsv1deletebyid) | **DELETE** /api/v1/UserReportings({Id}) | Deletes a user reporting
-*UserReportingsApi* | [**UserReportingsV1Get**](docs/UserReportingsApi.md#userreportingsv1get) | **GET** /api/v1/UserReportings | Returns all user reportings
-*UserReportingsApi* | [**UserReportingsV1GetById**](docs/UserReportingsApi.md#userreportingsv1getbyid) | **GET** /api/v1/UserReportings({Id}) | Returns all user reportings
-*UsersApi* | [**UsersV1Get**](docs/UsersApi.md#usersv1get) | **GET** /api/v1/Users | Returns all users
-*UsersApi* | [**UsersV1GetById**](docs/UsersApi.md#usersv1getbyid) | **GET** /api/v1/Users({Id}) | Returns all users
-
-
-<a name="documentation-for-models"></a>
-## Documentation for Models
-
- - [Model.Article](docs/Article.md)
- - [Model.ArticleCategory](docs/ArticleCategory.md)
- - [Model.ArticleDiscount](docs/ArticleDiscount.md)
- - [Model.ArticleSalesPrice](docs/ArticleSalesPrice.md)
- - [Model.ArticleSupplierQuotation](docs/ArticleSupplierQuotation.md)
- - [Model.Company](docs/Company.md)
- - [Model.CompanyAddress](docs/CompanyAddress.md)
- - [Model.CompanyType](docs/CompanyType.md)
- - [Model.ContactPerson](docs/ContactPerson.md)
- - [Model.CustomField](docs/CustomField.md)
- - [Model.CustomFieldDefinition](docs/CustomFieldDefinition.md)
- - [Model.CustomFieldOption](docs/CustomFieldOption.md)
- - [Model.DocumentCondition](docs/DocumentCondition.md)
- - [Model.DocumentPosition](docs/DocumentPosition.md)
- - [Model.Lead](docs/Lead.md)
- - [Model.ModelObject](docs/ModelObject.md)
- - [Model.ODataResponseListCompany](docs/ODataResponseListCompany.md)
- - [Model.ODataResponseListCompanyAddress](docs/ODataResponseListCompanyAddress.md)
- - [Model.ODataResponseListCompanyType](docs/ODataResponseListCompanyType.md)
- - [Model.ODataResponseListContactPerson](docs/ODataResponseListContactPerson.md)
- - [Model.ODataResponseListCustomFieldDefinition](docs/ODataResponseListCustomFieldDefinition.md)
- - [Model.ODataResponseListProject](docs/ODataResponseListProject.md)
- - [Model.ODataResponseListProjectRole](docs/ODataResponseListProjectRole.md)
- - [Model.ODataResponseListProjectStatus](docs/ODataResponseListProjectStatus.md)
- - [Model.ODataResponseListProjectTemplate](docs/ODataResponseListProjectTemplate.md)
- - [Model.ODataResponseListQuotation](docs/ODataResponseListQuotation.md)
- - [Model.ODataResponseListUser](docs/ODataResponseListUser.md)
- - [Model.ODataResponseListUserAbsence](docs/ODataResponseListUserAbsence.md)
- - [Model.ODataResponseListUserReporting](docs/ODataResponseListUserReporting.md)
- - [Model.Project](docs/Project.md)
- - [Model.ProjectRole](docs/ProjectRole.md)
- - [Model.ProjectStatus](docs/ProjectStatus.md)
- - [Model.ProjectTemplate](docs/ProjectTemplate.md)
- - [Model.Quotation](docs/Quotation.md)
- - [Model.Subsystem](docs/Subsystem.md)
- - [Model.Task](docs/Task.md)
- - [Model.User](docs/User.md)
- - [Model.UserAbsence](docs/UserAbsence.md)
- - [Model.UserReporting](docs/UserReporting.md)
-
+Visit https://api.hqlabs.de/docs/index for the detailed API documentation.
 
 ## Documentation for Authorization
 
-### basic
+### OAuth 2.0
 
-- **Type**: HTTP basic authentication
+- **Type**: OAuth 2.0 Authentication
 
+The HQ API uses OAuth 2.0 Authentication, which is a secure and flexible authentication framework. 
+This way, the users are authenticated personally and their right levels in API and HQ are identical.
+
+To enabled non-personal access, for example for background sync activities like imports and exports which require full read and write access, the API provides a dedicated Sync User with a pre-shared Access Token. This token can be retrieved in the HQ administration panel.
+
+Read more about authentication and the HQ API in the documentation https://api.hqlabs.de/docs/index.
