@@ -49,6 +49,19 @@ namespace Authentication
         /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
         /// <param name="appSecret">The app secret of this client</param>
         /// <param name="accessToken">The pre-shared access token (typically of the Sync User) or an already existing access token from a previous session</param>
+        public OAuthTokenManager(HQAPIClientConfiguration configuration, string appId, string appSecret, string accessToken)
+            : this(configuration, appId, appSecret)
+        {
+            CurrentAccessToken = accessToken;
+        }
+
+        /// <summary>
+        /// Creates a new token manager without pre-shared access token and refresh token.
+        /// </summary>
+        /// <param name="configuration">The client configuration containing the base URL, among others</param>
+        /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
+        /// <param name="appSecret">The app secret of this client</param>
+        /// <param name="accessToken">The pre-shared access token (typically of the Sync User) or an already existing access token from a previous session</param>
         /// <param name="refreshToken">The pre-shared refresh token (typically of the Sync User) or an already existing refresh token from a previous session</param>
         /// <param name="expiresOn">The expiration date of the access token</param>
         public OAuthTokenManager(HQAPIClientConfiguration configuration, string appId, string appSecret, string accessToken, string refreshToken, DateTime expiresOn)
@@ -81,8 +94,7 @@ namespace Authentication
         {
             // If current credentials are about to expire or not set, get a new access token using the refresh token
             var threshold = DateTime.UtcNow.AddMinutes(0);
-            int val = ExpiresOn.Value.CompareTo(threshold);
-            if (string.IsNullOrWhiteSpace(CurrentAccessToken) || !ExpiresOn.HasValue || val < 0)
+            if (string.IsNullOrWhiteSpace(CurrentAccessToken) || (ExpiresOn.HasValue && ExpiresOn.Value.CompareTo(threshold) < 0))
             {
                 if (!string.IsNullOrWhiteSpace(CurrentRefreshToken))
                 {

@@ -9,9 +9,10 @@ namespace Authentication
 {
     public class TokenRefreshedEventArgs : EventArgs
     {
+        public AccessTokenWrapper TokenResponse { get; private set; }
         public TokenRefreshedEventArgs(AccessTokenWrapper refreshTokenWrapper)
         {
-
+            TokenResponse = refreshTokenWrapper;
         }
     }
 }

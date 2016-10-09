@@ -130,6 +130,9 @@ namespace HQ.API.SDK.Sample
         private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
         {
             // Store access and refresh token securely so they can be used again next time
+            User.AccessToken = e.TokenResponse.AccessToken;
+            User.RefreshToken = e.TokenResponse.RefreshToken;
+            User.TokenExpiresOn = DateTime.UtcNow.Add(e.TokenResponse.GetExpirationTimeSpan());
         }
     }
 }
@@ -192,6 +195,9 @@ public function GetAccessTokenForUser(string internalUserId)
 private void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
 {
     // Store access and refresh token securely so they can be used again next time
+    User.AccessToken = e.TokenResponse.AccessToken;
+    User.RefreshToken = e.TokenResponse.RefreshToken;
+    User.TokenExpiresOn = DateTime.UtcNow.Add(e.TokenResponse.GetExpirationTimeSpan());
 }
 
 ```
@@ -223,6 +229,9 @@ public HQAPIClient ConstructClientForUser(string accessToken, string refreshToke
 private void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
 {
     // Store access and refresh token securely so they can be used again next time
+    User.AccessToken = e.TokenResponse.AccessToken;
+    User.RefreshToken = e.TokenResponse.RefreshToken;
+    User.TokenExpiresOn = DateTime.UtcNow.Add(e.TokenResponse.GetExpirationTimeSpan());
 }
 
 ```
@@ -235,4 +244,5 @@ Let us know what you think of our API and SDK! For feedback, suggestions and que
 ## Website and Contact
 
 http://helloHQ.io
+<br/>
 <a href="mailto:support@helloHQ.io">support@helloHQ.io</a>

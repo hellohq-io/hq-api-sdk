@@ -66,6 +66,19 @@ namespace Config
         /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
         /// <param name="appSecret">The app secret of this client</param>
         /// <param name="accessToken">The pre-shared access token (typically of the Sync User) or an already existing access token from a previous session</param>
+        /// <returns></returns>
+        public OAuthTokenManager CreateOAuthTokenManager(string appId, string appSecret, string accessToken)
+        {
+            OAuthTokenManager = new Authentication.OAuthTokenManager(this, appId, appSecret, accessToken);
+            return OAuthTokenManager;
+        }
+
+        /// <summary>
+        /// Creates a new token manager in the current client configuration with a pre-shared token or a token from a previous session.
+        /// </summary>
+        /// <param name="appId">The app id of this client, in the form of {customer_id}-{client_id}</param>
+        /// <param name="appSecret">The app secret of this client</param>
+        /// <param name="accessToken">The pre-shared access token (typically of the Sync User) or an already existing access token from a previous session</param>
         /// <param name="refreshToken">The pre-shared refresh token (typically of the Sync User) or an already existing refresh token from a previous session</param>
         /// <param name="expiresOn">The expiration date of the access token</param>
         /// <returns></returns>
