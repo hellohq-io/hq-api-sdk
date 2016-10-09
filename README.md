@@ -6,6 +6,10 @@ This C# SDK allows convenient access to the HQ API.
 - API version: v1
 - SDK version: 1.1.0
 
+## HQ API Documentation
+
+https://api.hqlabs.de/
+
 ## Frameworks supported
 - .NET 4.0 or later
 
@@ -137,20 +141,18 @@ namespace HQ.API.SDK.Sample
 
 All URIs are relative to *https://api.hqlabs.de/*
 
-Visit https://api.hqlabs.de/docs/index for the detailed API documentation.
+Visit the <a href="https://api.hqlabs.de/docs/index">HQ API documentation</a> for details about the entities and their endpoints.
 
 ## Documentation for Authorization
 
 ### OAuth 2.0
-
-- **Type**: OAuth 2.0 Authentication
 
 The HQ API uses OAuth 2.0 Authentication, which is a secure and flexible authentication framework. 
 This way, the users are authenticated personally and their right levels in API and HQ are identical.
 
 To enabled non-personal access, for example for background sync activities like imports and exports which require full read and write access, the API provides a dedicated Sync User with a pre-shared Access Token. This token can be retrieved in the HQ administration panel.
 
-Read more about authentication and the HQ API in the documentation https://api.hqlabs.de/docs/index.
+Read more about OAuth 2.0 authentication in the <a href="https://api.hqlabs.de/docs/index">HQ API documentation</a> or the <a href="https://oauth.net/2/">OAuth 2.0 framework documentation</a>.
 
 
 ### Getting an Access Token for a user
@@ -187,12 +189,15 @@ public function GetAccessTokenForUser(string internalUserId)
     .....
 }
     
-private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
+private void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
 {
     // Store access and refresh token securely so they can be used again next time
 }
 
 ```
+
+
+### Using a previously received Access and Refresh Token
 
 After you have initially received an Access Token and Refresh Token for a user, you can pass those to the client configuration directly so that no further user interaction is required.
 
@@ -215,9 +220,19 @@ public HQAPIClient ConstructClientForUser(string accessToken, string refreshToke
     return client;
 }
     
-private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
+private void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
 {
     // Store access and refresh token securely so they can be used again next time
 }
 
 ```
+
+## Feedback and Support
+
+Let us know what you think of our API and SDK! For feedback, suggestions and questions, please contact us at <a href="mailto:support@helloHQ.io">support@helloHQ.io</a>.
+
+
+## Website and Contact
+
+http://helloHQ.io
+<a href="mailto:support@helloHQ.io">support@helloHQ.io</a>
