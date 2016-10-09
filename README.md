@@ -48,7 +48,7 @@ namespace HQ.API.SDK.Sample
     {
         static void Main(string[] args)
         {
-            // Create a client configuration with an OAuth Token Manager, using the pre-shared Access Token fpr the SyncUser
+            // Create a client configuration with an OAuth Token Manager, using the pre-shared Access Token for the Sync User
             var config = new HQAPIClientConfiguration("https://api.hqlabs.de");
             var manager = config.CreateOAuthTokenManager("AppId", "AppSecret",
                 "SyncUser-AccessToken");
@@ -151,3 +151,73 @@ This way, the users are authenticated personally and their right levels in API a
 To enabled non-personal access, for example for background sync activities like imports and exports which require full read and write access, the API provides a dedicated Sync User with a pre-shared Access Token. This token can be retrieved in the HQ administration panel.
 
 Read more about authentication and the HQ API in the documentation https://api.hqlabs.de/docs/index.
+
+
+### Getting an Access Token for a user
+
+The following sample code shows how to initially retrieve an Access and Refresh Token for a user. The internal user id can be passed as a state argument, which will be returned in the response URL. This makes it easier for your application to match the received token to a user.
+
+```csharp
+
+public function GetAccessTokenForUser(string internalUserId)
+{
+    // Construct the authorization URL
+    var authorizeUrl = OAuthTokenManager.GetAuthorizeUrl("AppId", internalUserId, "https://localhost/", new string[] {"read_all","write_all"});
+
+    // Direct a web browser to the authorizeUrl
+    ....
+
+    // Retrieve the authorization code from the response URL
+    var authorizationCode = ....
+
+    // Configure the client and token manager
+    var config = new HQAPIClientConfiguration("https://api.hqlabs.de");
+    var manager = config.CreateOAuthTokenManager("AppId", "AppSecret");
+
+    // Register a callback for when the token was refreshed
+    manager.TokenRefreshed += Manager_TokenRefreshed;
+
+    // Exchange the authorization code for an Access Token
+    manager.GetAccessToken(authorizationCode);
+
+    // Create the client with the configuration
+    var client = new HQAPIClient(config);
+
+    // Use the client
+    .....
+}
+    
+private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
+{
+    // Store access and refresh token securely so they can be used again next time
+}
+
+```
+
+After you have initially received an Access Token and Refresh Token for a user, you can pass those to the client configuration directly so that no further user interaction is required.
+
+```csharp
+
+public HQAPIClient ConstructClientForUser(string accessToken, string refreshToken)
+{
+    // Configure the client and token manager
+    var config = new HQAPIClientConfiguration("https://api.hqlabs.de");
+    var manager = config.CreateOAuthTokenManager("AppId", "AppSecret"
+        accessToken, refreshToken);
+
+    // Register a callback for when the token was refreshed
+    manager.TokenRefreshed += Manager_TokenRefreshed;
+
+    // Create the client with the configuration
+    var client = new HQAPIClient(config);
+
+    // Use the client
+    return client;
+}
+    
+private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
+{
+    // Store access and refresh token securely so they can be used again next time
+}
+
+```
