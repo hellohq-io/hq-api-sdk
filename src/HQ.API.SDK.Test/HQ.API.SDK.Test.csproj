@@ -74,60 +74,6 @@ limitations under the License.
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\CompaniesApiTests.cs" />
-    <Compile Include="Api\CompanyAddressesApiTests.cs" />
-    <Compile Include="Api\CompanyTypesApiTests.cs" />
-    <Compile Include="Api\ContactPersonsApiTests.cs" />
-    <Compile Include="Api\CustomFieldDefinitionsApiTests.cs" />
-    <Compile Include="Api\ProjectRolesApiTests.cs" />
-    <Compile Include="Api\ProjectsApiTests.cs" />
-    <Compile Include="Api\ProjectStatusApiTests.cs" />
-    <Compile Include="Api\ProjectTemplatesApiTests.cs" />
-    <Compile Include="Api\QuotationsApiTests.cs" />
-    <Compile Include="Api\UserAbsencesApiTests.cs" />
-    <Compile Include="Api\UserReportingsApiTests.cs" />
-    <Compile Include="Api\UsersApiTests.cs" />
-    <Compile Include="Model\ArticleCategoryTests.cs" />
-    <Compile Include="Model\ArticleDiscountTests.cs" />
-    <Compile Include="Model\ArticleSalesPriceTests.cs" />
-    <Compile Include="Model\ArticleSupplierQuotationTests.cs" />
-    <Compile Include="Model\ArticleTests.cs" />
-    <Compile Include="Model\CompanyAddressTests.cs" />
-    <Compile Include="Model\CompanyTests.cs" />
-    <Compile Include="Model\CompanyTypeTests.cs" />
-    <Compile Include="Model\ContactPersonTests.cs" />
-    <Compile Include="Model\CustomFieldDefinitionTests.cs" />
-    <Compile Include="Model\CustomFieldOptionTests.cs" />
-    <Compile Include="Model\CustomFieldTests.cs" />
-    <Compile Include="Model\DocumentConditionTests.cs" />
-    <Compile Include="Model\DocumentPositionTests.cs" />
-    <Compile Include="Model\LeadTests.cs" />
-    <Compile Include="Model\ModelObjectTests.cs" />
-    <Compile Include="Model\ODataResponseListCompanyAddressTests.cs" />
-    <Compile Include="Model\ODataResponseListCompanyTests.cs" />
-    <Compile Include="Model\ODataResponseListCompanyTypeTests.cs" />
-    <Compile Include="Model\ODataResponseListContactPersonTests.cs" />
-    <Compile Include="Model\ODataResponseListCustomFieldDefinitionTests.cs" />
-    <Compile Include="Model\ODataResponseListProjectRoleTests.cs" />
-    <Compile Include="Model\ODataResponseListProjectStatusTests.cs" />
-    <Compile Include="Model\ODataResponseListProjectTemplateTests.cs" />
-    <Compile Include="Model\ODataResponseListProjectTests.cs" />
-    <Compile Include="Model\ODataResponseListQuotationTests.cs" />
-    <Compile Include="Model\ODataResponseListUserAbsenceTests.cs" />
-    <Compile Include="Model\ODataResponseListUserReportingTests.cs" />
-    <Compile Include="Model\ODataResponseListUserTests.cs" />
-    <Compile Include="Model\ProjectRoleTests.cs" />
-    <Compile Include="Model\ProjectStatusTests.cs" />
-    <Compile Include="Model\ProjectTemplateTests.cs" />
-    <Compile Include="Model\ProjectTests.cs" />
-    <Compile Include="Model\QuotationTests.cs" />
-    <Compile Include="Model\SubsystemTests.cs" />
-    <Compile Include="Model\TaskTests.cs" />
-    <Compile Include="Model\UserAbsenceTests.cs" />
-    <Compile Include="Model\UserReportingTests.cs" />
-    <Compile Include="Model\UserTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MsBuildToolsPath)\Microsoft.CSharp.targets" />
