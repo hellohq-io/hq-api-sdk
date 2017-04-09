@@ -22,19 +22,20 @@ namespace HQ.API.SDK.Sample
             var client = new HQAPIClient(config);
 
             // Get a company by id
-            var companyById = client.CompaniesV1_GetByIdAsync(78044).Result;
+            var companyById = client.CompaniesV1_GetByIdAsync(1).Result;
             Console.WriteLine("Company by Id: " + companyById.Name);
 
             // Modify the company name and save it using a PUT
             companyById.Name = companyById.Name + " (API)";
+            companyById.DefaultAddress.Country = "DE";
             companyById = client.CompaniesV1_PutByIdAsync(companyById.Id, companyById).Result;
 
             // Create a new company with a default address and a company type
             var newCompany = new Company()
             {
                 Name = "Unit Corp.",
-                DebitorNumber = 3456,
                 CreditorNumber = 1234,
+                DebitorNumber = 3456,
                 Description = "A test corporation",
                 IndustrialSector = "Testing",
                 DefaultAddress = new CompanyAddress()
