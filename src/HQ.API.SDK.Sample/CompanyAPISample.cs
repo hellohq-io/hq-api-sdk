@@ -6,21 +6,8 @@ namespace HQ.API.SDK.Sample
 {
     public class CompanyAPISample
     {
-        static void Main(string[] args)
+        public void CompanyAPI (HQAPIClient client)
         {
-            // Create a client configuration with an OAuth Token Manager
-            var config = new HQAPIClientConfiguration("https://api.hqlabs.de");
-            var manager = config.CreateOAuthTokenManager("AppId", "AppSecret",
-                "SyncUser-AccessToken",
-                "SyncUser-RefreshToken",
-                DateTime.UtcNow.AddSeconds(2500000));
-
-            // Register a callback for when the token was refreshed
-            manager.TokenRefreshed += Manager_TokenRefreshed;
-
-            // Create the client with the configuration
-            var client = new HQAPIClient(config);
-
             // Get a company by id
             var companyById = client.CompaniesV1_GetByIdAsync(1).Result;
             Console.WriteLine("Company by Id: " + companyById.Name);
@@ -84,11 +71,6 @@ namespace HQ.API.SDK.Sample
 
             // Wait to show the results
             Console.ReadLine();
-        }
-
-        private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)
-        {
-            // Store access and refresh token securely so they can be used again next time
         }
     }
 }
