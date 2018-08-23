@@ -17514,7 +17514,7 @@ namespace HQ.API.SDK
 
         [JsonProperty("StartDate", Required = Required.Always)]
         [Required]
-        public DateTime StartDate { get; set; }
+        public DateTimeOffset StartDate { get; set; }
 
         [JsonProperty("Duration", Required = Required.Always)]
         public double Duration { get; set; }
