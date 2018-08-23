@@ -21,14 +21,13 @@ namespace HQ.API.SDK.Sample
             // Create the client with the configuration
             var client = new HQAPIClient(config);
 
-            //Create and put a new UserReporting Example
+            // Create and put a new UserReporting Example
             var newReproting = new CreateUserReportingAPISample();
             newReproting.CreateUserReportingApi(client);
 
-            //Get and create Company Example
+            // Get and create Company Example
             var Company = new CompanyAPISample();
             Company.CompanyAPI(client);
-
         }
 
         private static void Manager_TokenRefreshed(object sender, TokenRefreshedEventArgs e)

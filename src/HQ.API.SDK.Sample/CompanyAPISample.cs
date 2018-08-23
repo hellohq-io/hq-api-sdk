@@ -9,7 +9,7 @@ namespace HQ.API.SDK.Sample
         public void CompanyAPI (HQAPIClient client)
         {
             // Get a company by id
-            var companyById = client.CompaniesV1_GetByIdAsync(4002).Result;
+            var companyById = client.CompaniesV1_GetByIdAsync(1).Result;
             Console.WriteLine("Company by Id: " + companyById.Name);
 
             // Modify the company name and save it using a PUT
