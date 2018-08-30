@@ -167,7 +167,7 @@ The following sample code shows how to initially retrieve an Access and Refresh 
 public function GetAccessTokenForUser(string internalUserId)
 {
     // Construct the authorization URL
-    var authorizeUrl = OAuthTokenManager.GetAuthorizeUrl("AppId", internalUserId, "https://localhost/", new string[] {"read_all","write_all"});
+    var authorizeUrl = OAuthTokenManager.GetAuthorizeUrl("AppId", internalUserId, "http://localhost/", new string[] {"read_all","write_all"});
 
     // Direct a web browser to the authorizeUrl
     ....
@@ -183,7 +183,7 @@ public function GetAccessTokenForUser(string internalUserId)
     manager.TokenRefreshed += Manager_TokenRefreshed;
 
     // Exchange the authorization code for an Access Token
-    manager.GetAccessToken(authorizationCode);
+    manager.GetAccessToken(authorizationCode, "http://localhost/");
 
     // Create the client with the configuration
     var client = new HQAPIClient(config);

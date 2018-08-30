@@ -137,10 +137,11 @@ namespace Authentication
         /// <param name="appId"></param>
         /// <param name="appSecret"></param>
         /// <param name="authorizationCode"></param>
+        /// <param name="redirectUri"></param>
         /// <returns></returns>
-        public AccessTokenWrapper GetAccessToken(string appId, string appSecret, string authorizationCode)
+        public AccessTokenWrapper GetAccessToken(string appId, string appSecret, string authorizationCode, string redirectUri)
         {
-            var accessTokenWrapper = GetAccessToken(appId, appSecret, "authorization_code", "code", authorizationCode);
+            var accessTokenWrapper = GetAccessToken(appId, appSecret, "authorization_code", "code", authorizationCode, redirectUri);
 
             if (accessTokenWrapper != null)
             {
@@ -192,7 +193,7 @@ namespace Authentication
         /// <returns></returns>
         public AccessTokenWrapper RefreshAccessToken(string appId, string appSecret, string refreshToken)
         {
-            var accessTokenWrapper = GetAccessToken(appId, appSecret, "refresh_token", "refresh_token", refreshToken);
+            var accessTokenWrapper = GetAccessToken(appId, appSecret, "refresh_token", "refresh_token", refreshToken, null);
 
             if (accessTokenWrapper != null)
             {
@@ -210,11 +211,12 @@ namespace Authentication
         /// Tries to get an access token with the provided authorization code.
         /// If an access token was retrieved, the access token and refresh token are stored in the token manager an will be used for subsequent requests.
         /// </summary>
-        /// <param name="authorizationCode"></param>
+        /// <param name="authorizationCode">The authorization code</param>
+        /// <param name="redirectUri">The redirect uri used to get the authorization code</param>
         /// <returns></returns>
-        public AccessTokenWrapper GetAccessToken(string authorizationCode)
+        public AccessTokenWrapper GetAccessToken(string authorizationCode, string redirectUri)
         {
-            return GetAccessToken(AppId, AppSecret, authorizationCode);
+            return GetAccessToken(AppId, AppSecret, authorizationCode, redirectUri);
         }
 
         /// <summary>
@@ -225,14 +227,20 @@ namespace Authentication
         /// <param name="grantType">The OAuth grant type</param>
         /// <param name="tokenType">The OAuth token type</param>
         /// <param name="code">The authorization code or refresh token</param>
+        /// <param name="redirectUri">The redirect uri used to get the authorization code</param>
         /// <returns></returns>
-        private AccessTokenWrapper GetAccessToken(string appId, string appSecret, string grantType, string tokenType, string code)
+        private AccessTokenWrapper GetAccessToken(string appId, string appSecret, string grantType, string tokenType, string code, string redirectUri)
         {
             var client = new RestClient(Configuration.BaseUrl);
 
             var request = new RestRequest(TokenPath, Method.POST);
 
             string body = string.Format("grant_type={0}&{1}={2}", grantType, tokenType, code);
+
+            if(redirectUri != null)
+            {
+                body += string.Format("&redirect_uri={0}", redirectUri);
+            }
 
             request.AddHeader("Authorization", "Basic " + GetBasicAuthToken(appId, appSecret));
             request.AddParameter("application/x-www-form-urlencoded", body, ParameterType.RequestBody);
