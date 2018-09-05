@@ -11771,6 +11771,66 @@ namespace HQ.API.SDK
             return default(User);
         }
 
+        /// <summary>Returns the currently authenticated user</summary>
+        /// <param name="select">Selects which properties to include in the response.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public Task<User> MeV1_GetAsync(string select = null)
+        {
+            return MeV1_GetAsync(CancellationToken.None, select);
+        }
+
+        /// <summary>Returns the currently authenticated user</summary>
+        /// <param name="select">Selects which properties to include in the response.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>OK</returns>
+        /// <exception cref="SwaggerException">A server side error occurred.</exception>
+        public async Task<User> MeV1_GetAsync(CancellationToken cancellationToken, string select = null)
+        {
+            var url_ = string.Format("{0}/{1}?", BaseUrl, "v1/Me");
+
+            if (select != null)
+                url_ += string.Format("$select={0}&", Uri.EscapeDataString(select.ToString()));
+
+            var client_ = new HttpClient();
+            var request_ = new HttpRequestMessage();
+            PrepareRequest(client_, ref url_);
+            request_.Method = new HttpMethod("GET");
+            request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
+            var response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseContentRead, cancellationToken).ConfigureAwait(false);
+            ProcessResponse(client_, response_);
+
+            var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            var status_ = ((int)response_.StatusCode).ToString();
+            var value = string.Empty;
+            if (responseData_.Length > 0)
+            {
+                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
+            }
+
+            if (status_ == "200")
+            {
+                var result_ = default(User);
+                try
+                {
+                    if (responseData_.Length > 0)
+                    {
+                        result_ = JsonConvert.DeserializeObject<User>(value);
+                    }
+                    return result_;
+                }
+                catch (Exception exception)
+                {
+                    throw new SwaggerException("Could not deserialize the response body.", status_, responseData_, exception);
+                }
+            }
+            else
+            if (status_ != "200" && status_ != "204")
+                throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
+
+            return default(User);
+        }
+
         /// <summary>Returns all customfields of the user</summary>
         /// <param name="expand">Expands related entities inline.</param>
         /// <param name="filter">Filters the results, based on a Boolean condition.</param>

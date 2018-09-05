@@ -21,6 +21,9 @@ namespace HQ.API.SDK.Sample
             // Create the client with the configuration
             var client = new HQAPIClient(config);
 
+            // Get the details about the currently authenticated user.
+            var user = client.MeV1_GetAsync().Result;
+
             // Create and put a new UserReporting Example
             var newReproting = new CreateUserReportingAPISample();
             newReproting.CreateUserReportingApi(client);
