@@ -6055,7 +6055,7 @@ namespace HQ.API.SDK
         /// <summary>Returns the real binary data of the pdf file</summary>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public Task<ODataResponseOfListOfByte> InvoicesV1_GetValueFromInvoicesDocumentFileByIdAsync(int id)
+        public Task<byte[]> InvoicesV1_GetValueFromInvoicesDocumentFileByIdAsync(int id)
         {
             return InvoicesV1_GetValueFromInvoicesDocumentFileByIdAsync(CancellationToken.None, id);
         }
@@ -6064,7 +6064,7 @@ namespace HQ.API.SDK
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public async Task<ODataResponseOfListOfByte> InvoicesV1_GetValueFromInvoicesDocumentFileByIdAsync(CancellationToken cancellationToken, int id)
+        public async Task<byte[]> InvoicesV1_GetValueFromInvoicesDocumentFileByIdAsync(CancellationToken cancellationToken, int id)
         {
             var url_ = string.Format("{0}/{1}", BaseUrl, "v1/Invoices({Id})/DocumentFile/$value");
 
@@ -6082,33 +6082,16 @@ namespace HQ.API.SDK
 
             var responseData_ = await response_.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             var status_ = ((int)response_.StatusCode).ToString();
-            var value = string.Empty;
-            if (responseData_.Length > 0)
-            {
-                value = Encoding.UTF8.GetString(responseData_, 0, responseData_.Length);
-            }
 
             if (status_ == "200")
             {
-                var result_ = default(ODataResponseOfListOfByte);
-                try
-                {
-                    if (responseData_.Length > 0)
-                    {
-                        result_ = JsonConvert.DeserializeObject<ODataResponseOfListOfByte>(value);
-                    }
-                    return result_;
-                }
-                catch (Exception exception)
-                {
-                    throw new SwaggerException("Could not deserialize the response body.", status_, responseData_, exception);
-                }
+                return responseData_;
             }
             else
             if (status_ != "200" && status_ != "204")
                 throw new SwaggerException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", status_, responseData_, null);
 
-            return default(ODataResponseOfListOfByte);
+            return null;
         }
 
         /// <summary>Returns all quotations</summary>
@@ -16766,28 +16749,6 @@ namespace HQ.API.SDK
         public static Invoice FromJson(string data)
         {
             return JsonConvert.DeserializeObject<Invoice>(data);
-        }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    [GeneratedCode("NJsonSchema", "6.0.6305.38127")]
-    public partial class ODataResponseOfListOfByte
-    {
-
-        [JsonProperty("@odata.context", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public string ODataContext { get; set; }
-
-        [JsonProperty("value", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public ObservableCollection<int> Value { get; set; }
-
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-
-        public static ODataResponseOfListOfByte FromJson(string data)
-        {
-            return JsonConvert.DeserializeObject<ODataResponseOfListOfByte>(data);
         }
     }
 
