@@ -15155,7 +15155,9 @@ namespace HQ.API.SDK
         [JsonProperty("Id", Required = Required.Always)]
         public int Id { get; set; }
 
-        /// <summary>All task type status from this type</summary>         [JsonProperty("TaskTypeStatus", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]         public ObservableCollection<TaskTypeStatus> TaskTypeStatus { get; set; }
+        /// <summary>All task type status from this type</summary>
+        [JsonProperty("TaskTypeStatus", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public ObservableCollection<TaskTypeStatus> TaskTypeStatus { get; set; }
 
         /// <summary>The id of the user who created this entity</summary>
         [JsonProperty("CreatedBy", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
