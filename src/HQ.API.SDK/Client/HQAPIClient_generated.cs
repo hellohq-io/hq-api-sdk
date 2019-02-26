@@ -15155,6 +15155,8 @@ namespace HQ.API.SDK
         [JsonProperty("Id", Required = Required.Always)]
         public int Id { get; set; }
 
+        /// <summary>All task type status from this type</summary>         [JsonProperty("TaskTypeStatus", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]         public ObservableCollection<TaskTypeStatus> TaskTypeStatus { get; set; }
+
         /// <summary>The id of the user who created this entity</summary>
         [JsonProperty("CreatedBy", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public int? CreatedBy { get; set; }
@@ -15199,10 +15201,6 @@ namespace HQ.API.SDK
         /// <summary>The id of the task type</summary>
         [JsonProperty("TaskTypeId", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public int? TaskTypeId { get; set; }
-
-        /// <summary>The task type this status belongs to</summary>
-        [JsonProperty("TaskType", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-        public TaskType TaskType { get; set; } = new TaskType();
 
         /// <summary>The unique identifier of this entity</summary>
         [JsonProperty("Id", Required = Required.Always)]
