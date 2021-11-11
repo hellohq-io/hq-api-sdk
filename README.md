@@ -1,5 +1,7 @@
-# HQ API SDK - the C# library for the HQ API
+# This repository is deprecated and will not be updated anyore
 
+
+# HQ API SDK - the C# library for the HQ API
 
 This C# SDK allows convenient access to the HQ API.
 
